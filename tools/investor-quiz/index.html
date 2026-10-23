@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投資屬性測驗｜許仙秘笈投資學院</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#E5533D; --red-deep:#B83A28; --red-l:#FDECE8;
+    --mint:#2FA586; --mint-2:#7CCBB3; --mint-l:#E6F5EF;
+    --gold:#E9A91F; --gold-2:#F6CF6B; --gold-l:#FFF4D8;
+    --ink:#23262B; --ink-2:#5B6068; --ink-3:#8C9098;
+    --night:#1C2731; --night-2:#263544; --night-3:#33475A;
+    --line:#E8E6E1; --card:#F6F5F2; --paper:#FFFFFF;
+    --brush:"LXGW WenKai TC","Noto Sans TC",serif;
+    --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{background:#EEF3F7 url(img/ink.webp) repeat;background-size:640px auto;min-height:100%}
+  html,body{margin:0;color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  body{line-height:1.6;background:transparent}
+  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 56px}
+  button{font-family:inherit}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  [hidden]{display:none !important}
+
+  .topbar{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink-3);margin-bottom:24px}
+  .topbar a{color:var(--ink-3);text-decoration:none}
+  .topbar a:hover{color:var(--red)}
+  .brand{color:var(--red);font-weight:700;letter-spacing:.05em}
+
+  /* ===== 開始頁 ===== */
+  .cover{position:relative;border-radius:22px;overflow:hidden;background:var(--night) url(img/scene.webp) center 62%/cover;color:#fff;padding:30px 24px 24px;margin-bottom:22px;aspect-ratio:4/5;max-height:560px;width:100%;box-shadow:0 10px 30px rgba(28,39,49,.18)}
+  .cover::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,32,44,.78) 0,rgba(20,32,44,.5) 34%,rgba(20,32,44,0) 58%);z-index:1}
+  .cover h1,.cover .sub{text-shadow:0 2px 14px rgba(0,0,0,.45)}
+  .cover h1{font-family:var(--brush);font-weight:700;font-size:46px;line-height:1.15;margin:0 0 8px;position:relative;z-index:2}
+  .cover .sub{font-family:var(--brush);font-size:20px;color:var(--gold-2);margin:0;position:relative;z-index:2}
+    .roster{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 22px}
+  .roster figure{margin:0;background:var(--night);border-radius:14px;overflow:hidden;text-align:center;padding:8px 4px 6px}
+  .roster img{display:block;width:100%;height:120px;object-fit:contain;object-position:center bottom}
+  .roster figcaption{font-family:var(--brush);font-size:17px;color:#fff;margin-top:4px}
+  .scroll{border-left:4px solid var(--red);background:rgba(255,255,255,.82);padding:14px 18px;border-radius:0 12px 12px 0;margin:0 0 16px;font-size:15px}
+  .scroll p{margin:0 0 6px}.scroll p:last-child{margin:0}
+  .meta{font-size:14px;color:var(--ink-2);margin:0 0 22px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:14px 30px;font-size:16px;font-weight:700;cursor:pointer;background:var(--red);color:#fff;text-decoration:none;transition:background .15s}
+  .btn:hover{background:var(--red-deep)}
+  .btn.ghost{background:transparent;color:var(--ink-2);border:1.5px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--ink-3);color:var(--ink)}
+
+  /* ===== 作答 ===== */
+  .progress{display:grid;grid-template-columns:repeat(13,1fr);gap:4px;margin-bottom:10px}
+  .progress i{height:6px;border-radius:3px;background:var(--line);transition:background .2s}
+  .progress i.done{background:var(--red)}
+  .progress i.now{background:var(--gold)}
+  .qmeta{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-3);margin-bottom:22px}
+  .part{color:var(--red);font-weight:700}
+  .context{font-size:14px;color:var(--ink-2);background:rgba(255,255,255,.8);border-radius:10px;padding:10px 14px;margin:0 0 16px}
+  .qtitle{font-family:var(--brush);font-size:16px;color:var(--ink-3);margin:0 0 4px}
+  .qtext{font-size:21px;font-weight:700;line-height:1.5;margin:0 0 22px}
+  .opts{display:grid;gap:10px}
+  .opt{display:block;width:100%;text-align:left;background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;color:var(--ink);transition:border-color .15s,background .15s}
+  .opt:hover{border-color:var(--ink-3)}
+  .opt.on{border-color:var(--red);background:var(--red-l)}
+  .opt b{display:block;font-size:16px;margin-bottom:2px}
+  .opt span{display:block;font-size:14px;color:var(--ink-2)}
+  .opt .k{display:inline-block;width:24px;height:24px;border-radius:50%;background:var(--card);color:var(--ink-2);font-size:13px;text-align:center;line-height:24px;margin-right:8px;font-weight:700}
+  .opt.on .k{background:var(--red);color:#fff}
+  .qnav{margin-top:22px}
+  .back{background:none;border:0;color:var(--ink-3);font-size:14px;cursor:pointer;padding:6px 0}
+  .back:hover{color:var(--ink)}
+
+  /* ===== 過場頁 ===== */
+  .gate{border-radius:22px;overflow:hidden;background:var(--paper);box-shadow:0 10px 30px rgba(28,39,49,.15)}
+  .gate .pic{aspect-ratio:1942/809;background:var(--night) center/cover;animation:pan 9s ease-out both}
+  @keyframes pan{from{background-size:112% auto;background-position:50% 40%}to{background-size:100% auto;background-position:50% 50%}}
+  .gate .body{padding:22px 22px 26px}
+  .gate .kicker{color:var(--red);font-weight:700;font-size:13px;letter-spacing:.06em;margin:0 0 4px}
+  .gate h2{font-family:var(--brush);font-weight:700;font-size:34px;line-height:1.2;margin:0 0 10px}
+  .gate .txt{font-size:15.5px;color:var(--ink-2);margin:0 0 6px}
+  .gate .n{font-size:13.5px;color:var(--ink-3);margin:0 0 20px}
+  .qbanner{height:78px;border-radius:14px;margin-bottom:14px;background:var(--night) center/cover;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+
+  /* ===== 結果：英雄區 ===== */
+  .reveal{position:relative;border-radius:24px;overflow:hidden;background:var(--night);color:#fff;text-align:center;padding:26px 20px 28px}
+  .reveal .peaks{position:absolute;left:0;right:0;bottom:0;width:100%;height:46%;z-index:0}
+  .reveal > *{position:relative;z-index:1}
+  .reveal .lead{font-size:13.5px;color:#B9C4CE;margin:0 0 8px;letter-spacing:.08em}
+  .stage{position:relative;height:400px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:8px}
+  .stage img{max-height:400px;max-width:100%;object-fit:contain;filter:drop-shadow(0 14px 22px rgba(0,0,0,.35))}
+  .seal{width:132px;height:132px;background:var(--red);border-radius:14px;display:flex;align-items:center;justify-content:center;transform:rotate(-5deg);box-shadow:inset 0 0 0 5px var(--red),inset 0 0 0 7px rgba(255,255,255,.85),0 10px 30px rgba(229,83,61,.35)}
+  .stage .seal{position:absolute;left:0;bottom:6px;width:86px;height:86px}
+  .stage .seal #sealText{font-size:32px}
+  .stage.noimg{align-items:center}
+  .stage.noimg .seal{position:static;width:170px;height:170px}
+  .stage.noimg .seal #sealText{font-size:64px}
+  #sealText{display:flex;flex-direction:column;align-items:center;font-family:var(--brush);font-weight:700;color:#fff;font-size:50px;line-height:1.08}
+  .seal.stamp{animation:stamp .6s cubic-bezier(.2,1.4,.4,1) both}
+  @keyframes stamp{0%{transform:rotate(-5deg) scale(1.7);opacity:0}100%{transform:rotate(-5deg) scale(1);opacity:1}}
+  .fullname{font-family:var(--brush);font-weight:700;font-size:44px;line-height:1.2;margin:0}
+  .fullname .t{color:var(--gold-2)}
+  .motto{font-family:var(--brush);font-size:19px;color:#DCE3E9;margin:4px 0 0}
+  .badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .badges span{font-size:12.5px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.1);color:#E8EDF1;border:1px solid rgba(255,255,255,.18)}
+  .desc{font-size:15.5px;color:var(--ink-2);margin:20px 0 0}
+
+  section.block{margin-top:38px}
+  .h2{font-family:var(--brush);font-weight:700;font-size:25px;margin:0 0 4px}
+  .hint{font-size:13.5px;color:var(--ink-3);margin:0 0 16px}
+
+  /* ===== 速限橫條 ===== */
+  .gauge{background:var(--night);border-radius:18px;padding:16px 16px 14px;color:#fff;margin-bottom:12px}
+  .g-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .g-head b{font-size:16px}
+  .g-head .g-val{font-size:13px;color:#B9C4CE;white-space:nowrap}
+  .g-head .g-val strong{font-family:var(--sans);font-weight:900;font-size:26px;color:var(--c);margin-left:4px;letter-spacing:-.02em}
+  .g-sub{font-size:12.5px;color:#93A1AE;margin:2px 0 18px}
+  .g-track{position:relative;height:22px;border-radius:6px;background:
+      repeating-linear-gradient(90deg,rgba(255,255,255,.16) 0 1px,transparent 1px calc(10% - .1px)),
+      var(--night-2);
+    margin-top:30px}
+  .g-band{position:absolute;top:0;bottom:0;left:calc(var(--min) / var(--scale) * 100%);width:calc((var(--max) - var(--min)) / var(--scale) * 100%);border-radius:6px;
+    background:linear-gradient(90deg,color-mix(in srgb,var(--c) 55%,transparent),var(--c));box-shadow:0 0 18px color-mix(in srgb,var(--c) 55%,transparent)}
+  .g-band.pt{min-width:6px;transform:translateX(-3px)}
+  .g-needle{position:absolute;top:-8px;bottom:-8px;left:calc(var(--val) / var(--scale) * 100%);width:4px;margin-left:-2px;border-radius:2px;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.8)}
+  .g-needle::after{content:attr(data-v);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;color:var(--night);background:#fff;padding:1px 7px;border-radius:999px;white-space:nowrap}
+  .g-limit{position:absolute;top:50%;left:calc(var(--lim) / var(--scale) * 100%);transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#fff;border:5px solid var(--red);color:var(--ink);font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+  .g-scale{position:relative;height:16px;font-size:11px;color:#7F8E9C;margin-top:6px}
+  .g-scale span{position:absolute;transform:translateX(-50%)}
+  .g-scale span:first-child{transform:none}
+  .g-scale span:last-child{transform:translateX(-100%)}
+  .g-range{font-size:13px;color:#DCE3E9;margin-top:6px}
+  .g-range i{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c);margin-right:6px;vertical-align:-1px}
+  .gauge.off .g-track{background:repeating-linear-gradient(135deg,var(--night-2) 0 8px,var(--night-3) 8px 16px)}
+  .gauge.off .g-off{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:#C9D2DA;letter-spacing:.1em}
+
+  /* 屬性量尺（淺色） */
+  .axis{margin-bottom:18px}
+  .axis .row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px}
+  .axis .row em{font-style:normal;color:var(--ink-2)}
+  .seg{display:grid;gap:4px}
+  .seg i{height:12px;border-radius:3px;background:var(--line)}
+  .seg i.on{background:var(--c)}
+  .ends{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3);margin-top:5px}
+
+  .mapbox{position:relative;border-radius:20px;overflow:hidden;padding:44px 14px 48px;background:#E9DFC6 url(img/map.webp) center/cover;box-shadow:0 10px 26px rgba(28,39,49,.16)}
+  .mapbox::before{content:"";position:absolute;inset:0;background:rgba(255,252,244,.12)}
+  .map{position:relative;display:grid;grid-template-columns:44px 1fr 1fr;gap:8px;font-size:14px}
+  .map .hd,.map .rl{font-size:12.5px;color:var(--ink);font-weight:700;background:rgba(255,255,255,.88);border-radius:999px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px 6px}
+  .map .hd{align-self:end}
+  .map .rl{border-radius:12px}
+  .cell{background:rgba(255,255,255,.66);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);font-weight:700;border-radius:12px;padding:16px 6px;text-align:center;font-family:var(--brush);font-size:21px;color:var(--ink-2)}
+  .cell.me{background:var(--red);-webkit-backdrop-filter:none;backdrop-filter:none;color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(229,83,61,.35)}
+
+  .money{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px;font-size:14.5px}
+  .money input{width:110px;padding:9px 10px;font-size:16px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;color:var(--ink)}
+  .money input:focus{border-color:var(--red);outline:none}
+  .stack{display:flex;height:40px;border-radius:12px;overflow:hidden;margin-bottom:12px}
+  .stack div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden}
+  .legend{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:14px}
+  .legend div{display:flex;align-items:baseline;gap:8px}
+  .legend i{width:10px;height:10px;border-radius:3px;flex:none;transform:translateY(1px)}
+  .legend b{margin-left:auto;font-weight:700}
+  .legend em{font-style:normal;color:var(--ink-3);font-size:12.5px}
+
+  .tip{background:var(--gold-l);border-radius:14px;padding:14px 16px;font-size:14.5px}
+  .tip b{display:block;margin-bottom:2px}
+  .cheer{margin-top:38px;position:relative;padding:22px 20px 20px 22px;border-radius:18px;background:var(--red-l)}
+  .cheer p{font-family:var(--brush);font-size:21px;line-height:1.7;margin:0 0 12px;color:var(--ink)}
+  .cheer .from{font-family:var(--brush);font-size:15px;color:var(--red);margin:0 0 14px;text-align:right}
+  .cheer .note{font-family:var(--sans);font-size:13.5px;color:var(--ink-2);margin:0}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+  footer{margin-top:40px;font-size:12px;color:var(--ink-3);text-align:center}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+  @media (max-width:420px){.gate h2{font-size:30px}.qbanner{height:62px}.cover h1{font-size:38px}.fullname{font-size:36px}.qtext{font-size:19px}.legend{grid-template-columns:1fr}.roster img{height:100px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="peaks" viewBox="0 0 400 150" preserveAspectRatio="none">
+      <path d="M0 95 L40 62 L70 80 L118 30 L160 78 L200 52 L240 85 L290 40 L335 80 L370 60 L400 78 L400 150 L0 150Z" fill="#2B3B4B"/>
+      <path d="M0 118 L55 88 L95 108 L150 72 L205 110 L250 90 L300 112 L350 84 L400 104 L400 150 L0 150Z" fill="#33475A"/>
+      <path d="M0 136 L70 116 L130 132 L190 112 L260 134 L320 118 L400 132 L400 150 L0 150Z" fill="#3E5468"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <div class="topbar">
+    <span class="brand">許仙秘笈投資學院</span>
+    <a href="../../index.html">回課堂工具箱</a>
+  </div>
+
+  <!-- 開始 -->
+  <main id="intro">
+    <div class="cover">
+      <h1>投資屬性<br>測驗</h1>
+      <p class="sub">在許仙秘笈的武林裡，你是哪一種投資人？</p>
+    </div>
+    <div class="roster" aria-label="六種角色" id="roster"></div>
+    <div class="scroll">
+      <p>這份測驗沒有標準答案，每個選項都是一種合理的投資風格。</p>
+      <p>請憑你最真實的想法作答，找出屬於你的角色，以及適合你的資產配置。</p>
+    </div>
+    <p class="meta">共 13 題，大約 3 分鐘</p>
+    <button class="btn" id="startBtn">開始測驗</button>
+  </main>
+
+  <!-- 過場 -->
+  <main id="gate" hidden>
+    <div class="gate">
+      <div class="pic" id="gatePic" role="img"></div>
+      <div class="body">
+        <p class="kicker" id="gateKicker"></p>
+        <h2 id="gateTitle" tabindex="-1"></h2>
+        <p class="txt" id="gateText"></p>
+        <p class="n" id="gateN"></p>
+        <button class="btn" id="gateBtn"></button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 作答 -->
+  <main id="quiz" hidden>
+    <div class="qbanner" id="qbanner" aria-hidden="true"></div>
+    <div class="progress" id="progress" aria-hidden="true"></div>
+    <div class="qmeta"><span class="part" id="partLabel"></span><span id="count"></span></div>
+    <p class="context" id="context" hidden>假設你現在要開始投資，請想像你準備投入股市的錢，回答下面的問題。</p>
+    <p class="qtitle" id="qtitle"></p>
+    <h2 class="qtext" id="qtext" tabindex="-1"></h2>
+    <div class="opts" id="opts" role="radiogroup"></div>
+    <div class="qnav"><button class="back" id="backBtn">上一題</button></div>
+  </main>
+
+  <!-- 結果 -->
+  <main id="result" hidden>
+    <div class="reveal">
+      <svg class="peaks" aria-hidden="true"><use href="#peaks"/></svg>
+      <p class="lead">你的投資人角色是</p>
+      <div class="stage" id="stage">
+        <img id="roleImg" alt="">
+        <div class="seal" id="seal"><span id="sealText"></span></div>
+      </div>
+      <h1 class="fullname" id="fullname"></h1>
+      <p class="motto" id="motto"></p>
+      <div class="badges" id="badges"></div>
+    </div>
+    <p class="desc" id="desc"></p>
+
+    <section class="block">
+      <h2 class="h2">你的投資屬性</h2>
+      <p class="hint">由你的作答分數換算而來</p>
+      <div id="axes"></div>
+    </section>
+
+    <section class="block">
+      <h2 class="h2">你在武林中的位置</h2>
+      <p class="hint">風險承受度決定上下，主動程度決定左右</p>
+      <div class="mapbox"><div class="map" id="map"></div></div>
+    </section>
+
+    <section class="block">
+      <h2 class="h2">建議資產配置</h2>
+      <p class="hint">有顏色的區段是建議範圍，白色指針是建議數字。建議數字是起點，可以在範圍內依自己的情況微調。</p>
+      <div id="gauges"></div>
+    </section>
+
+    <section class="block">
+      <h2 class="h2">單檔上限</h2>
+      <p class="hint">一檔股票最多可以佔整個投資部位多少。紅框數字是上限，不管怎麼調整都不能超過。</p>
+      <div id="caps"></div>
+      <p class="hint">大型股：市值 1,000 億元以上的公司（大約是台灣上市櫃公司市值前 150 名）</p>
+    </section>
+
+    <section class="block">
+      <h2 class="h2">換算成實際金額</h2>
+      <p class="hint">照建議數字配置，整個投資部位會這樣分</p>
+      <label class="money">投資部位
+        <input type="number" id="amount" min="1" step="1" inputmode="numeric" aria-label="投資部位金額（萬元）"> 萬元
+      </label>
+      <div class="stack" id="stack" aria-hidden="true"></div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="block">
+      <h2 class="h2">進場建議</h2>
+      <div class="tip" id="entry"></div>
+    </section>
+
+    <div class="cheer">
+      <p id="cheer"></p>
+      <p class="from">許仙老師</p>
+      <p class="note">這份結果反映的是你現在的投資屬性，會隨著人生階段改變。建議每年回來測一次，重新調整你的投資框架。</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn" id="retryBtn">重新測驗</button>
+      <a class="btn ghost" href="../../index.html">回課堂工具箱</a>
+    </div>
+  </main>
+
+  <footer>僅供許仙秘笈投資學院課堂教學使用，測驗結果為教學參考，不構成投資建議</footer>
+</div>
+
+<script>
+const Q = [
+  {part:1, title:"資金大小", text:"一開始你打算投入多少？", axis:"amount",
+   opts:[{b:"10 萬以下"},{b:"10～50 萬"},{b:"50～100 萬"},{b:"100 萬以上"}]},
+  {part:1, title:"後續追加資金方式", text:"之後你打算怎麼追加資金？", axis:"add",
+   opts:[{b:"不會，就這一筆"},{b:"固定主動加碼"},{b:"用定期定額無腦扣款"}]},
+  {part:1, title:"能承受的虧損", text:"這筆錢帳面虧到多少，你還能接受？", axis:"risk",
+   opts:[{b:"0～10%",s:"我希望資產不要縮水超過 10%"},{b:"10～30%",s:"能接受中等程度的虧損，但不要太過頭"},{b:"30% 以上",s:"虧損也無所謂，畢竟高風險、高報酬"}]},
+  {part:1, title:"投資期限", text:"投入的這筆錢，你動用它的頻率是？", axis:"risk",
+   opts:[{b:"隨時可能動用",s:"日常想買東西時，我可能會看情況賣股票換現金"},{b:"1～3 年",s:"投資一段時間後，我會想把它領出來做其他打算"},{b:"3 年以上",s:"我打算長期投資，這段時間完全不動這筆錢"}]},
+  {part:1, title:"現金流需求", text:"你對投資帶來的現金流（配息）有多重視？", axis:"cash",
+   opts:[{b:"非常看重",s:"希望配息能 cover 生活大部分的開銷，例如每月配息破萬元，這是我投資的主要考量"},{b:"可有可無",s:"有配息的話就拿來當生活費，但我不需要依靠這筆錢"},{b:"不需要",s:"如果真的有配息，我也會再把它投入股市"}]},
+  {part:1, title:"主動研究意願", text:"你願意花多少時間主動研究股市、挑選個股？", axis:"active",
+   opts:[{b:"不想花時間",s:"我不想研究個股，交給 ETF 跟著大盤就好"},{b:"偶爾研究",s:"有空時會看看財報和新聞，研究一兩檔有興趣的公司"},{b:"積極研究",s:"願意每週固定花時間研究，把選股當成投資的主力"}]},
+  {part:1, title:"操作頻率", text:"買進之後，你打算多久操作一次這筆資產？", axis:"active",
+   opts:[{b:"幾乎不動",s:"買了就長期持有，頂多一年檢視一兩次配置"},{b:"偶爾調整",s:"定期關注市場，遇到好時機才加碼或減碼，大約幾個月操作一次"},{b:"積極操作",s:"想抓波段，看到機會就進出，一個月可能操作好幾次"}]},
+  {part:1, title:"盯盤頻率", text:"持有股票期間，你多久會看一次盤？", axis:"active",
+   opts:[{b:"一週，甚至一個月左右才看一次"},{b:"一天看三到五次",s:"基本上會看開盤跟收盤"},{b:"每天看盤超過半小時"}]},
+  {part:2, title:"信心股下跌", text:"你很有信心的一檔股票突然下跌，你心中第一時間的感覺是？", axis:"risk",
+   opts:[{b:"可能是我看錯了",s:"要重新研究一下，考慮是不是該賣出"},{b:"便宜加碼的好時機來了",s:"我要大舉加碼進場"}]},
+  {part:2, title:"聽到明牌", text:"你的朋友是很厲害的投資研究者，績效也不錯。他報了一檔明牌給你，而且對這檔股票很有信心，你會？", axis:"active",
+   opts:[{b:"立即買進",s:"避免錯過接下來的漲幅"},{b:"先觀察一段時間",s:"一定要自己詳細、透徹地研究過，才願意買進"}]},
+  {part:2, title:"持股變飆股", text:"你手上的一檔持股突然變成市場上消息滿天飛的大飆股，短短 5 天拉出 3 根漲停板，表現非常強勢。這時候你心裡想的是？", axis:"risk",
+   opts:[{b:"哇，賺了好多錢！",s:"我想找個時間點獲利了結，把錢放進口袋"},{b:"翻倍不是夢",s:"照這個漲勢看下去，我要續抱住這檔股票"}]},
+  {part:2, title:"不動的股票", text:"你持有的一檔股票，一整年股價幾乎都沒有動，你的感覺是？", axis:"risk",
+   opts:[{b:"一整年沒漲也沒關係",s:"反正只要沒賠錢就好"},{b:"這筆錢也有機會成本",s:"換去別的標的可能已經賺了不少，考慮換成別的股票操作"}]},
+  {part:2, title:"十年後的投資成果", text:"經過 10 年的投資之後，哪一種狀態比較吸引你？", axis:"cash",
+   opts:[{b:"每個月有一筆穩定的被動收入",s:"不用擔心生活開銷"},{b:"累積了一大筆資產",s:"擁有更多選擇的自由"}]}
+];
+
+const ROLES = {
+  "禪師":{img:"chanshi", motto:"心如止水，以靜制動",
+    desc:"你重視資產的穩定與安心，不追求刺激。你相信時間的力量，把投資交給紀律和複利，穩穩參與市場就是最好的修練。",
+    cheer:"穩，是最被低估的力量。你不需要追逐每一次漲跌，只要守住紀律、讓時間替你工作，複利會給你最好的回報。",
+    hold:[60,90,75], stock:[0,10,0], small:null, capL:[null,10], capS:null},
+  "軍師":{img:"junshi", motto:"運籌帷幄，謀定後動",
+    desc:"你喜歡研究，凡事想清楚才出手，但偏好穩健的標的。你的強項是冷靜分析，在可控的風險裡找到好機會。",
+    cheer:"你的研究就是你的武器。保持好奇、謀定後動，一次又一次有根據的判斷，會慢慢累積成別人看不見的優勢。",
+    hold:[60,90,80], stock:[30,50,40], small:null, capL:[10,20], capS:null},
+  "掌門":{img:"zhangmen", motto:"根基深厚，穩坐一方",
+    desc:"你能承受一定的市場起伏，以長期持有為主。你不急著出招，靠扎實的根基，讓資產隨著市場一起成長。",
+    cheer:"根基穩，才走得遠。市場起起落落的時候，記得你手上的核心部位，就是你最可靠的底氣。",
+    hold:[60,90,75], stock:[0,30,10], small:null, capL:[5,20], capS:null},
+  "將領":{img:"jiangling", motto:"統兵布陣，進退有據",
+    desc:"你願意主動研究、親自出手操作，但凡事講求章法和紀律，懂得在進攻與防守之間拿捏分寸。",
+    cheer:"進攻與防守之間的分寸，是最難練的功夫。照著你的計畫布陣，每一次出手都有章法，你就已經走在大多數人前面。",
+    hold:[50,90,80], stock:[40,60,50], small:[0,20,20], capL:[15,30], capS:[5,10]},
+  "大俠":{img:"daxia", motto:"胸懷大局，順勢而行",
+    desc:"你看得長遠，不畏懼市場的大風大浪。你不需要天天研究個股，而是站在大趨勢上，讓時間放大你的報酬。",
+    cheer:"看得遠的人，不怕眼前的風浪。順著大勢、耐住性子，時間會站在你這一邊。",
+    hold:[60,90,80], stock:[0,50,30], small:[0,50,25], capL:[10,30], capS:[5,15]},
+  "劍聖":{img:"jiansheng", motto:"劍法精湛，出手制勝",
+    desc:"你有自信、行動力強，願意投入大量心力研究和操作。你勇於承擔波動，追求更高的報酬，精準掌握每一次出手的時機。",
+    cheer:"你的勇氣和行動力，是你最大的天賦。把紀律放在劍法之前，設好上限、守住區間，你的每一劍都會更有力量。",
+    hold:[40,100,90], stock:[50,100,70], small:[0,50,30], capL:[20,40], capS:[10,20]}
+};
+const TITLES = {
+  "活水":{motto:"源源不絕，隨時可用", desc:"你重視投資帶來的穩定現金流，希望資產能定期回饋生活。", hd:[50,100,50]},
+  "兼修":{motto:"取用與修練並行", desc:"你既想享受配息收入，也想讓資產持續成長，兩者兼顧。", hd:[20,60,20]},
+  "蓄勢":{motto:"閉關蓄力，等待爆發", desc:"你把收益全部投入再成長，追求資產長期累積的最大力量。", hd:[0,20,0]}
+};
+const GRID = [["禪師","軍師"],["掌門","將領"],["大俠","劍聖"]];
+const ENTRY = [
+  {t:"單筆資金分批進場", d:"你不打算再追加資金，建議把這筆錢分批投入，依持股比例區間逐步布局，不要一次全部買進。"},
+  {t:"依許仙劍法找買點加碼", d:"你會固定主動加碼，建議依許仙劍法「順大勢，逆小勢」找買點，等鐘擺回到中心附近再出手。"},
+  {t:"ETF 部位用定期定額", d:"你偏好定期定額，建議 ETF 部位設定定期定額扣款，個股部位再自己找買點進場。"}
+];
+const AMOUNT_DEFAULT = [10,30,75,100];
+const GATES = {
+  1:{pic:"path-market", kicker:"第一部分｜投資屬性題", title:"踏入江湖",
+     text:"假設你現在要開始投資，請想像你準備投入股市的那筆錢，回答接下來的問題。", btn:"出發"},
+  2:{pic:"path-summit", kicker:"第二部分｜情境題", title:"登山問道",
+     text:"接下來是幾個投資時會遇到的情境，憑你的第一直覺選就好，沒有對錯。", btn:"繼續前進"}
+};
+const PART_PIC = {1:"path-market", 2:"path-summit"};
+["path-market","path-summit","map"].forEach(n => { const i = new Image(); i.src = "img/" + n + ".webp"; });
+
+let idx = 0;
+const ans = new Array(Q.length).fill(null);
+const $ = id => document.getElementById(id);
+function show(id){ ["intro","gate","quiz","result"].forEach(s => $(s).hidden = s !== id); window.scrollTo(0,0); }
+
+$("roster").innerHTML = Object.entries(ROLES).map(([n, r]) => '<figure><img src="img/' + r.img + '.webp" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'"><figcaption>' + n + '</figcaption></figure>').join("");
+$("progress").innerHTML = Q.map(() => "<i></i>").join("");
+
+function openGate(part){
+  const g = GATES[part], n = Q.filter(q => q.part === part).length;
+  $("gatePic").style.backgroundImage = "url(img/" + g.pic + ".webp)";
+  $("gatePic").setAttribute("aria-label", part === 1 ? "熱鬧的市集街道" : "通往山頂的石階");
+  $("gateKicker").textContent = g.kicker;
+  $("gateTitle").textContent = g.title;
+  $("gateText").textContent = g.text;
+  $("gateN").textContent = "共 " + n + " 題";
+  $("gateBtn").textContent = g.btn;
+  $("gateBtn").onclick = () => { show("quiz"); renderQ(); $("qtext").focus({preventScroll:true}); };
+  show("gate");
+}
+
+function renderQ(){
+  const q = Q[idx];
+  $("qbanner").style.backgroundImage = "url(img/" + PART_PIC[q.part] + ".webp)";
+  [...$("progress").children].forEach((el, i) => { el.className = i < idx ? "done" : i === idx ? "now" : ""; });
+  $("partLabel").textContent = q.part === 1 ? "第一部分｜投資屬性題" : "第二部分｜情境題";
+  $("count").textContent = (idx + 1) + " / " + Q.length;
+  $("context").hidden = q.part !== 1;
+  $("qtitle").textContent = q.title;
+  $("qtext").textContent = q.text;
+  const box = $("opts"); box.innerHTML = "";
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement("button");
+    btn.className = "opt" + (ans[idx] === i ? " on" : "");
+    btn.setAttribute("role","radio");
+    btn.setAttribute("aria-checked", ans[idx] === i ? "true" : "false");
+    btn.innerHTML = '<b><span class="k">' + "ABCD"[i] + '</span>' + o.b + '</b>' + (o.s ? '<span>' + o.s + '</span>' : '');
+    btn.onclick = () => pick(i);
+    box.appendChild(btn);
+  });
+  $("backBtn").hidden = idx === 0;
+}
+
+function pick(i){
+  ans[idx] = i;
+  [...$("opts").children].forEach((b, j) => { b.classList.toggle("on", j === i); b.setAttribute("aria-checked", j === i ? "true" : "false"); });
+  setTimeout(() => {
+    if (idx < Q.length - 1) {
+      const from = Q[idx].part; idx++;
+      if (Q[idx].part !== from) openGate(Q[idx].part);
+      else { renderQ(); $("qtext").focus({preventScroll:true}); }
+    }
+    else renderResult();
+  }, 260);
+}
+
+function score(i){ const q = Q[i], a = ans[i]; return q.opts.length === 2 ? (a === 0 ? 1 : 3) : a + 1; }
+function pct(v){ return (Math.round(v * 10) / 10) + "%"; }
+function money(base, p){ return (Math.round(base * p / 10) / 10).toLocaleString("zh-TW") + " 萬"; }
+
+/* 速限橫條：rng=[最小,最大,建議]；scale=刻度最大值 */
+function gauge(o){
+  const sc = o.scale || 100;
+  if (o.off) {
+    return '<div class="gauge off" style="--c:' + o.c + '"><div class="g-head"><b>' + o.name + '</b><span class="g-val">' + o.offText + '</span></div>' +
+      '<p class="g-sub">' + o.sub + '</p><div class="g-track"><span class="g-off">' + o.offLabel + '</span></div>' +
+      scaleRow(sc) + '</div>';
+  }
+  const [mn, mx, v] = o.rng;
+  const vars = '--c:' + o.c + ';--min:' + mn + ';--max:' + mx + ';--val:' + (v ?? 0) + ';--scale:' + sc + (o.lim != null ? ';--lim:' + o.lim : '');
+  return '<div class="gauge" style="' + vars + '">' +
+    '<div class="g-head"><b>' + o.name + '</b><span class="g-val">' + (v == null ? o.noVal : '建議<strong>' + v + '%</strong>') + '</span></div>' +
+    '<p class="g-sub">' + o.sub + '</p>' +
+    '<div class="g-track"><div class="g-band' + (mx === mn ? ' pt' : '') + '"></div>' +
+      (v == null ? '' : '<div class="g-needle" data-v="' + v + '%"></div>') +
+      (o.lim != null ? '<div class="g-limit" title="上限">' + o.lim + '</div>' : '') +
+    '</div>' + scaleRow(sc) +
+    '<div class="g-range"><i></i>' + o.rangeText + '</div></div>';
+}
+function scaleRow(sc){
+  const ticks = [0, sc/2, sc];
+  return '<div class="g-scale">' + ticks.map(t => '<span style="left:' + (t/sc*100) + '%">' + t + '%</span>').join("") + '</div>';
+}
+
+function renderResult(){
+  let risk = 0, active = 0, cash = 0;
+  Q.forEach((q, i) => {
+    if (q.axis === "risk") risk += score(i);
+    if (q.axis === "active") active += score(i);
+    if (q.axis === "cash") cash += score(i);
+  });
+  const rLv = risk <= 8 ? 0 : risk <= 11 ? 1 : 2;
+  const aLv = active <= 7 ? 0 : 1;
+  const tName = cash <= 3 ? "活水" : cash === 4 ? "兼修" : "蓄勢";
+  const rName = GRID[rLv][aLv];
+  const R = ROLES[rName], T = TITLES[tName];
+
+  // 英雄區
+  const stage = $("stage"), img = $("roleImg");
+  stage.classList.add("noimg");
+  img.hidden = true;
+  img.onload = () => { img.hidden = false; stage.classList.remove("noimg"); };
+  img.onerror = () => { img.hidden = true; stage.classList.add("noimg"); };
+  img.alt = rName;
+  img.src = "img/" + R.img + ".webp";
+  $("sealText").innerHTML = [...rName].map(c => "<span>" + c + "</span>").join("");
+  const seal = $("seal"); seal.classList.remove("stamp"); void seal.offsetWidth; seal.classList.add("stamp");
+  $("fullname").innerHTML = '<span class="t">' + tName + '</span>' + rName;
+  $("motto").textContent = R.motto;
+  $("badges").innerHTML = ['風險承受度 ' + ["低","中","高"][rLv], aLv ? '招式派' : '內功派', tName + '｜' + T.motto].map(t => '<span>' + t + '</span>').join("");
+  $("desc").textContent = R.desc + T.desc;
+
+  // 屬性分段量尺
+  const axes = [
+    {name:"風險承受度", v:risk, min:5, max:15, label:["低","中","高"][rLv], ends:["低","高"], c:"var(--red)"},
+    {name:"主動程度", v:active, min:4, max:12, label:aLv ? "招式派（主動）" : "內功派（被動）", ends:["被動","主動"], c:"var(--mint)"},
+    {name:"現金流偏好", v:cash, min:2, max:6, label:tName, ends:["重視配息","重視成長"], c:"var(--gold)"}
+  ];
+  $("axes").innerHTML = axes.map(x => {
+    const n = x.max - x.min + 1, on = x.v - x.min + 1;
+    let s = '';
+    for (let k = 1; k <= n; k++) s += '<i' + (k <= on ? ' class="on"' : '') + '></i>';
+    return '<div class="axis" style="--c:' + x.c + '"><div class="row"><b>' + x.name + '</b><em>' + x.label + '（' + x.v + ' 分）</em></div>' +
+      '<div class="seg" style="grid-template-columns:repeat(' + n + ',1fr)">' + s + '</div>' +
+      '<div class="ends"><span>' + x.ends[0] + '</span><span>' + x.ends[1] + '</span></div></div>';
+  }).join("");
+
+  // 武林地圖
+  let m = '<div></div><div class="hd">內功派（被動）</div><div class="hd">招式派（主動）</div>';
+  ["低","中","高"].forEach((lv, r) => {
+    m += '<div class="rl">' + lv + '</div>';
+    GRID[r].forEach(n => { m += '<div class="cell' + (n === rName ? ' me' : '') + '">' + n + '</div>'; });
+  });
+  $("map").innerHTML = m;
+
+  // 建議配置：速限橫條
+  const g = [];
+  g.push(gauge({name:"持股比例區間", sub:"佔整個投資部位。市場熱時往下限減碼，市場冷時往上限加碼", rng:R.hold, c:"#E5533D",
+    rangeText:"建議範圍 " + R.hold[0] + "～" + R.hold[1] + "%，其餘保留現金"}));
+  g.push(gauge({name:"個股比例", sub:"佔持股部分，剩下的放 ETF", rng:R.stock, c:"#E9A91F",
+    rangeText:"建議範圍 " + R.stock[0] + "～" + R.stock[1] + "%"}));
+  if (R.small) g.push(gauge({name:"小型股比例", sub:"佔個股部分，剩下的放大型股", rng:R.small, c:"#F08A5D",
+    rangeText:"建議範圍 " + R.small[0] + "～" + R.small[1] + "%"}));
+  else g.push(gauge({name:"小型股比例", sub:"佔個股部分", off:true, offText:"只放大型股", offLabel:"不碰小型股", c:"#F08A5D"}));
+  g.push(gauge({name:"ETF 裡的高股息", sub:"佔 ETF 部分，剩下的放 0050（依你的稱號「" + tName + "」）", rng:T.hd, c:"#2FA586",
+    rangeText:"建議範圍 " + T.hd[0] + "～" + T.hd[1] + "%"}));
+  $("gauges").innerHTML = g.join("");
+
+  // 單檔上限：速限牌
+  const c = [];
+  c.push(gauge({name:"大型股單檔上限", sub:"佔整個投資部位", scale:50, rng:[0, R.capL[1], R.capL[0]], lim:R.capL[1], c:"#E5533D",
+    noVal:"建議不持有個股", rangeText:"單檔最多 " + R.capL[1] + "%" + (R.capL[0] == null ? "" : "，建議 " + R.capL[0] + "%")}));
+  if (R.capS) c.push(gauge({name:"小型股單檔上限", sub:"佔整個投資部位", scale:50, rng:[0, R.capS[1], R.capS[0]], lim:R.capS[1], c:"#F08A5D",
+    rangeText:"單檔最多 " + R.capS[1] + "%，建議 " + R.capS[0] + "%"}));
+  else c.push(gauge({name:"小型股單檔上限", sub:"佔整個投資部位", scale:50, off:true, offText:"不適用", offLabel:"不碰小型股", c:"#F08A5D"}));
+  $("caps").innerHTML = c.join("");
+
+  // 金額換算
+  const amt = $("amount");
+  amt.value = AMOUNT_DEFAULT[ans[0]];
+  const H = R.hold[2], S = R.stock[2], M = R.small ? R.small[2] : 0, D = T.hd[2];
+  const stock = H * S / 100, small = stock * M / 100, large = stock - small, etf = H - stock;
+  const hd = etf * D / 100, f50 = etf - hd;
+  const parts = [
+    {n:"現金", v:100 - H, c:"#A9ADB4"},
+    {n:"0050", v:f50, c:"#2FA586"},
+    {n:"高股息 ETF", v:hd, c:"#7CCBB3"},
+    {n:"大型股", v:large, c:"#E5533D"},
+    {n:"小型股", v:small, c:"#F08A5D"}
+  ].filter(p => p.v > 0.001);
+  const draw = () => {
+    const base = Math.max(0, parseFloat(amt.value) || 0);
+    $("stack").innerHTML = parts.map(p => '<div style="width:' + p.v + '%;background:' + p.c + '">' + (p.v >= 9 ? pct(p.v) : '') + '</div>').join("");
+    $("legend").innerHTML = parts.map(p => '<div><i style="background:' + p.c + '"></i><span>' + p.n + ' <em>' + pct(p.v) + '</em></span><b>' + money(base, p.v) + '</b></div>').join("");
+  };
+  amt.oninput = draw; draw();
+
+  const e = ENTRY[ans[1]];
+  $("entry").innerHTML = '<b>' + e.t + '</b>' + e.d;
+  $("cheer").textContent = R.cheer;
+  show("result");
+}
+
+$("startBtn").onclick = () => { idx = 0; openGate(1); };
+$("backBtn").onclick = () => { if (idx > 0) { idx--; renderQ(); } };
+$("retryBtn").onclick = () => { ans.fill(null); idx = 0; show("intro"); };
+</script>
+</body>
+</html>
