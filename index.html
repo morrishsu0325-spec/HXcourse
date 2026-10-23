@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>許仙秘笈投資學院｜課堂工具箱</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#E8543E; --red-dark:#C43F2C;
+    --teal:#2FB6A6; --teal-dark:#1F8F82;
+    --gold:#F0B429;
+    --cream:#FFF8F3; --card:#FFFFFF;
+    --ink:#2E3440; --muted:#6B7280;
+    --pink-bg:#FDEDE9; --mint-bg:#E7F7F4; --gold-bg:#FEF6E0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 92% -6%, #E7F7F4 0%, transparent 42%),
+      radial-gradient(circle at -8% 90%, #FEF6E0 0%, transparent 40%),
+      var(--cream);
+    min-height:100vh;
+    font-family:'Noto Sans TC', sans-serif;
+    color:var(--ink);
+    padding:40px 20px 70px;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-weight:700;color:var(--red);font-size:14px;letter-spacing:.04em;margin-bottom:10px;
+  }
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block;}
+  h1{font-size:clamp(30px,4.6vw,44px);font-weight:900;margin:0 0 12px;}
+  .sub{color:var(--muted);font-size:16px;line-height:1.6;margin:0 0 36px;max-width:600px;}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+  @media (max-width:600px){.grid{grid-template-columns:1fr;}}
+
+  .card{
+    background:var(--card);border-radius:22px;
+    box-shadow:0 12px 32px rgba(46,52,64,0.08);
+    padding:26px;display:flex;flex-direction:column;gap:14px;
+    text-decoration:none;color:inherit;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(46,52,64,0.12);}
+  .icon{
+    width:52px;height:52px;border-radius:16px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;
+  }
+  .icon.red{background:var(--pink-bg);}
+  .card h2{font-size:19px;margin:0;font-weight:700;}
+  .card p{margin:0;color:var(--muted);font-size:14px;line-height:1.6;flex:1;}
+  .tag{
+    align-self:flex-start;
+    font-family:'Fredoka',sans-serif;font-weight:600;font-size:12.5px;
+    padding:5px 12px;border-radius:999px;
+  }
+  .tag.ep{background:var(--gold-bg);color:#9A6B0C;}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:46px;letter-spacing:.03em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">許仙秘笈投資學院</div>
+  <h1>課堂工具箱</h1>
+  <p class="sub">上課用的互動小工具都放這裡，之後每新增一個課程工具，都會同步更新到這個頁面。</p>
+
+  <div class="grid">
+    <a class="card" href="tools/calculators.html" style="grid-column: 1 / -1;">
+      <div class="icon red">🧮</div>
+      <h2>通膨與複利計算機</h2>
+      <p>通膨購買力、複利成長、複利＋通膨聯合、0050／0056報酬率比較——四合一工具，按鈕切換使用。</p>
+      <span class="tag ep">EP2 · 長期投資 資產配置</span>
+    </a>
+    <a class="card" href="tools/rpg.html" style="grid-column: 1 / -1;">
+      <div class="icon red">🏰</div>
+      <h2>股市闖關 RPG</h2>
+      <p>從興櫃新手村點擊練功，抽產業類別、累積年齡／體力值／攻擊力／小弟，挑戰創新板、上櫃、上市三條晉級路線，體驗真實產業的成長曲線與黑天鵝風險。</p>
+      <span class="tag ep">EP3 · 台股機制全解析</span>
+    </a>
+    <a class="card" href="tools/investor-quiz/index.html" style="grid-column: 1 / -1;">
+      <div class="icon red">⚔️</div>
+      <h2>投資屬性測驗</h2>
+      <p>13 道題目找出你在許仙秘笈武林裡的投資人角色——禪師、軍師、掌門、將領、大俠、劍聖，並給出適合你的持股比例、個股與 ETF 配置和單檔上限。</p>
+      <span class="tag ep">EP8 · 投資系統總整理</span>
+    </a>
+  </div>
+
+  <footer>僅供許仙秘笈投資學院課堂教學使用</footer>
+</div>
+</body>
+</html>
