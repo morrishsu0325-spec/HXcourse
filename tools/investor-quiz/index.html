@@ -6,7 +6,7 @@
 <title>投資屬性測驗｜許仙秘笈投資學院</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --red:#E5533D; --red-deep:#B83A28; --red-l:#FDECE8;
@@ -15,7 +15,7 @@
     --ink:#23262B; --ink-2:#5B6068; --ink-3:#8C9098;
     --night:#1C2731; --night-2:#263544; --night-3:#33475A;
     --line:#E8E6E1; --card:#F6F5F2; --paper:#FFFFFF;
-    --brush:"LXGW WenKai TC","Noto Sans TC",serif;
+    --brush:"Noto Serif TC","Noto Serif CJK TC","Songti TC","PMingLiU",serif;
     --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
   }
   *{box-sizing:border-box}
@@ -33,21 +33,22 @@
   .brand{color:var(--red);font-weight:700;letter-spacing:.05em}
 
   /* ===== 開始頁 ===== */
-  .cover{position:relative;border-radius:22px;overflow:hidden;background:var(--night) url(img/scene.webp) center 62%/cover;color:#fff;padding:30px 24px 24px;margin-bottom:22px;aspect-ratio:4/5;max-height:560px;width:100%;box-shadow:0 10px 30px rgba(28,39,49,.18)}
-  .cover::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,32,44,.78) 0,rgba(20,32,44,.5) 34%,rgba(20,32,44,0) 58%);z-index:1}
+  .cover{position:relative;border-radius:24px;overflow:hidden;background:var(--night) url(img/scene.webp) center 60%/cover;color:#fff;padding:38px 26px 28px;min-height:min(78vh,720px);display:flex;flex-direction:column;box-shadow:0 18px 40px rgba(28,39,49,.22)}
+  .cover > *{position:relative;z-index:2}
+  .cover .kicker{font-size:13px;letter-spacing:.32em;color:#F6CF6B;margin:0 0 14px}
+  .cover .foot{margin-top:auto}
+  .cover .note{font-size:14.5px;line-height:1.75;color:#EEF2F5;margin:0 0 18px;max-width:30em}
+  .cover .meta{color:#C9D3DB;margin:0 0 0 14px;display:inline-block;font-size:13.5px}
+  .cover::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,26,36,.82) 0,rgba(16,26,36,.45) 30%,rgba(16,26,36,0) 46%,rgba(16,26,36,.55) 64%,rgba(16,26,36,.92) 82%,rgba(16,26,36,.95) 100%);z-index:1}
   .cover h1,.cover .sub{text-shadow:0 2px 14px rgba(0,0,0,.45)}
-  .cover h1{font-family:var(--brush);font-weight:700;font-size:46px;line-height:1.15;margin:0 0 8px;position:relative;z-index:2}
-  .cover .sub{font-family:var(--brush);font-size:20px;color:var(--gold-2);margin:0;position:relative;z-index:2}
-    .roster{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 22px}
-  .roster figure{margin:0;background:var(--night);border-radius:14px;overflow:hidden;text-align:center;padding:8px 4px 6px}
-  .roster img{display:block;width:100%;height:120px;object-fit:contain;object-position:center bottom}
-  .roster figcaption{font-family:var(--brush);font-size:17px;color:#fff;margin-top:4px}
-  .scroll{border-left:4px solid var(--red);background:rgba(255,255,255,.82);padding:14px 18px;border-radius:0 12px 12px 0;margin:0 0 16px;font-size:15px}
+  .cover h1{font-family:var(--brush);font-weight:900;font-size:52px;line-height:1.12;letter-spacing:.06em;margin:0 0 14px}
+  .cover .sub{font-family:var(--brush);font-weight:500;font-size:19px;letter-spacing:.04em;color:#fff;margin:0;opacity:.92}
+      .scroll{border-left:4px solid var(--red);background:rgba(255,255,255,.82);padding:14px 18px;border-radius:0 12px 12px 0;margin:0 0 16px;font-size:15px}
   .scroll p{margin:0 0 6px}.scroll p:last-child{margin:0}
   .meta{font-size:14px;color:var(--ink-2);margin:0 0 22px}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:14px 30px;font-size:16px;font-weight:700;cursor:pointer;background:var(--red);color:#fff;text-decoration:none;transition:background .15s}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:14px 32px;font-size:16px;font-weight:700;letter-spacing:.08em;box-shadow:0 8px 20px rgba(229,83,61,.35);cursor:pointer;background:var(--red);color:#fff;text-decoration:none;transition:background .15s}
   .btn:hover{background:var(--red-deep)}
-  .btn.ghost{background:transparent;color:var(--ink-2);border:1.5px solid var(--line)}
+  .btn.ghost{box-shadow:none;background:rgba(255,255,255,.7);color:var(--ink-2);border:1.5px solid var(--line)}
   .btn.ghost:hover{border-color:var(--ink-3);color:var(--ink)}
 
   /* ===== 作答 ===== */
@@ -58,11 +59,11 @@
   .qmeta{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-3);margin-bottom:22px}
   .part{color:var(--red);font-weight:700}
   .context{font-size:14px;color:var(--ink-2);background:rgba(255,255,255,.8);border-radius:10px;padding:10px 14px;margin:0 0 16px}
-  .qtitle{font-family:var(--brush);font-size:16px;color:var(--ink-3);margin:0 0 4px}
-  .qtext{font-size:21px;font-weight:700;line-height:1.5;margin:0 0 22px}
+  .qtitle{font-size:13px;letter-spacing:.12em;color:var(--red);font-weight:700;margin:0 0 6px}
+  .qtext{font-family:var(--brush);font-size:23px;font-weight:700;line-height:1.55;margin:0 0 22px}
   .opts{display:grid;gap:10px}
-  .opt{display:block;width:100%;text-align:left;background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;color:var(--ink);transition:border-color .15s,background .15s}
-  .opt:hover{border-color:var(--ink-3)}
+  .opt{display:block;width:100%;text-align:left;background:rgba(255,255,255,.92);border:1.5px solid rgba(35,38,43,.08);border-radius:16px;padding:15px 16px;box-shadow:0 2px 10px rgba(28,39,49,.05);cursor:pointer;color:var(--ink);transition:border-color .15s,background .15s,transform .15s}
+  .opt:hover{border-color:var(--red);transform:translateY(-1px)}
   .opt.on{border-color:var(--red);background:var(--red-l)}
   .opt b{display:block;font-size:16px;margin-bottom:2px}
   .opt span{display:block;font-size:14px;color:var(--ink-2)}
@@ -78,13 +79,14 @@
   @keyframes pan{from{background-size:112% auto;background-position:50% 40%}to{background-size:100% auto;background-position:50% 50%}}
   .gate .body{padding:22px 22px 26px}
   .gate .kicker{color:var(--red);font-weight:700;font-size:13px;letter-spacing:.06em;margin:0 0 4px}
-  .gate h2{font-family:var(--brush);font-weight:700;font-size:34px;line-height:1.2;margin:0 0 10px}
+  .gate h2{font-family:var(--brush);font-weight:900;letter-spacing:.06em;font-size:34px;line-height:1.2;margin:0 0 10px}
   .gate .txt{font-size:15.5px;color:var(--ink-2);margin:0 0 6px}
   .gate .n{font-size:13.5px;color:var(--ink-3);margin:0 0 20px}
   .qbanner{height:78px;border-radius:14px;margin-bottom:14px;background:var(--night) center/cover;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
 
   /* ===== 結果：英雄區 ===== */
-  .reveal{position:relative;border-radius:24px;overflow:hidden;background:var(--night);color:#fff;text-align:center;padding:26px 20px 28px}
+  .reveal{position:relative;border-radius:24px;overflow:hidden;background:var(--night) url(img/path-summit.webp) center 35%/cover;color:#fff;text-align:center;padding:26px 20px 30px;box-shadow:0 18px 40px rgba(28,39,49,.25)}
+  .reveal::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,26,36,.55) 0,rgba(16,26,36,.35) 35%,rgba(16,26,36,.9) 72%,rgba(16,26,36,.96) 100%);z-index:0}
   .reveal .peaks{position:absolute;left:0;right:0;bottom:0;width:100%;height:46%;z-index:0}
   .reveal > *{position:relative;z-index:1}
   .reveal .lead{font-size:13.5px;color:#B9C4CE;margin:0 0 8px;letter-spacing:.08em}
@@ -99,15 +101,16 @@
   #sealText{display:flex;flex-direction:column;align-items:center;font-family:var(--brush);font-weight:700;color:#fff;font-size:50px;line-height:1.08}
   .seal.stamp{animation:stamp .6s cubic-bezier(.2,1.4,.4,1) both}
   @keyframes stamp{0%{transform:rotate(-5deg) scale(1.7);opacity:0}100%{transform:rotate(-5deg) scale(1);opacity:1}}
-  .fullname{font-family:var(--brush);font-weight:700;font-size:44px;line-height:1.2;margin:0}
+  .fullname{font-family:var(--brush);font-weight:900;letter-spacing:.06em;font-size:46px;line-height:1.2;margin:0}
   .fullname .t{color:var(--gold-2)}
   .motto{font-family:var(--brush);font-size:19px;color:#DCE3E9;margin:4px 0 0}
   .badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
   .badges span{font-size:12.5px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.1);color:#E8EDF1;border:1px solid rgba(255,255,255,.18)}
-  .desc{font-size:15.5px;color:var(--ink-2);margin:20px 0 0}
+  .desc{font-size:15.5px;line-height:1.85;color:var(--ink-2);margin:18px 0 0;background:rgba(255,255,255,.85);border-radius:18px;padding:18px 20px;box-shadow:0 4px 16px rgba(28,39,49,.06)}
 
-  section.block{margin-top:38px}
-  .h2{font-family:var(--brush);font-weight:700;font-size:25px;margin:0 0 4px}
+  section.block{margin-top:22px;background:rgba(255,255,255,.88);border-radius:22px;padding:22px 20px;box-shadow:0 4px 18px rgba(28,39,49,.07)}
+  .h2{font-family:var(--brush);font-weight:900;font-size:23px;letter-spacing:.04em;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+  .h2::before{content:"";width:6px;height:22px;border-radius:3px;background:var(--red);flex:none}
   .hint{font-size:13.5px;color:var(--ink-3);margin:0 0 16px}
 
   /* ===== 速限橫條 ===== */
@@ -140,9 +143,16 @@
   .axis{margin-bottom:18px}
   .axis .row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px}
   .axis .row em{font-style:normal;color:var(--ink-2)}
+  .axis .row b{font-size:15px}
+  .axis .score{font-size:13px;color:var(--ink-3)}
+  .axis .score strong{font-size:22px;color:var(--c);font-weight:900;margin-right:2px}
+  .axis .tagc{display:inline-block;font-size:12.5px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:2px 10px;margin-left:8px;vertical-align:2px}
   .seg{display:grid;gap:4px}
-  .seg i{height:12px;border-radius:3px;background:var(--line)}
+  .seg i{height:14px;border-radius:4px;background:#ECEAE5}
   .seg i.on{background:var(--c)}
+  .zones{display:grid;gap:4px;margin-top:6px}
+  .zones span{font-size:12px;color:var(--ink-3);text-align:center;border-top:2px solid #E2DFD8;padding-top:4px}
+  .zones span.me{color:var(--c);border-top-color:var(--c);font-weight:700}
   .ends{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3);margin-top:5px}
 
   .mapbox{position:relative;border-radius:20px;overflow:hidden;padding:44px 14px 48px;background:#E9DFC6 url(img/map.webp) center/cover;box-shadow:0 10px 26px rgba(28,39,49,.16)}
@@ -167,8 +177,8 @@
 
   .tip{background:var(--gold-l);border-radius:14px;padding:14px 16px;font-size:14.5px}
   .tip b{display:block;margin-bottom:2px}
-  .cheer{margin-top:38px;position:relative;padding:22px 20px 20px 22px;border-radius:18px;background:var(--red-l)}
-  .cheer p{font-family:var(--brush);font-size:21px;line-height:1.7;margin:0 0 12px;color:var(--ink)}
+  .cheer{margin-top:22px;box-shadow:0 4px 18px rgba(28,39,49,.07);position:relative;padding:22px 20px 20px 22px;border-radius:18px;background:var(--red-l)}
+  .cheer p{font-family:var(--brush);font-weight:500;font-size:20px;line-height:1.7;margin:0 0 12px;color:var(--ink)}
   .cheer .from{font-family:var(--brush);font-size:15px;color:var(--red);margin:0 0 14px;text-align:right}
   .cheer .note{font-family:var(--sans);font-size:13.5px;color:var(--ink-2);margin:0}
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
@@ -198,16 +208,14 @@
   <!-- 開始 -->
   <main id="intro">
     <div class="cover">
+      <p class="kicker">許仙秘笈・EP8</p>
       <h1>投資屬性<br>測驗</h1>
       <p class="sub">在許仙秘笈的武林裡，你是哪一種投資人？</p>
+      <div class="foot">
+        <p class="note">沒有標準答案，每個選項都是一種合理的投資風格。憑你最真實的想法作答，找出屬於你的角色與資產配置。</p>
+        <button class="btn" id="startBtn">開始測驗</button><span class="meta">共 13 題・約 3 分鐘</span>
+      </div>
     </div>
-    <div class="roster" aria-label="六種角色" id="roster"></div>
-    <div class="scroll">
-      <p>這份測驗沒有標準答案，每個選項都是一種合理的投資風格。</p>
-      <p>請憑你最真實的想法作答，找出屬於你的角色，以及適合你的資產配置。</p>
-    </div>
-    <p class="meta">共 13 題，大約 3 分鐘</p>
-    <button class="btn" id="startBtn">開始測驗</button>
   </main>
 
   <!-- 過場 -->
@@ -239,7 +247,6 @@
   <!-- 結果 -->
   <main id="result" hidden>
     <div class="reveal">
-      <svg class="peaks" aria-hidden="true"><use href="#peaks"/></svg>
       <p class="lead">你的投資人角色是</p>
       <div class="stage" id="stage">
         <img id="roleImg" alt="">
@@ -253,7 +260,7 @@
 
     <section class="block">
       <h2 class="h2">你的投資屬性</h2>
-      <p class="hint">由你的作答分數換算而來</p>
+      <p class="hint">每條量尺從 0 分算起，亮起的格數就是你的分數，下方標出你落在哪一區</p>
       <div id="axes"></div>
     </section>
 
@@ -388,7 +395,6 @@ const ans = new Array(Q.length).fill(null);
 const $ = id => document.getElementById(id);
 function show(id){ ["intro","gate","quiz","result"].forEach(s => $(s).hidden = s !== id); window.scrollTo(0,0); }
 
-$("roster").innerHTML = Object.entries(ROLES).map(([n, r]) => '<figure><img src="img/' + r.img + '.webp" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'"><figcaption>' + n + '</figcaption></figure>').join("");
 $("progress").innerHTML = Q.map(() => "<i></i>").join("");
 
 function openGate(part){
@@ -439,7 +445,8 @@ function pick(i){
   }, 260);
 }
 
-function score(i){ const q = Q[i], a = ans[i]; return q.opts.length === 2 ? (a === 0 ? 1 : 3) : a + 1; }
+/* 每題 0 分起算：三選項 0／1／2 分，二選一 0／2 分 */
+function score(i){ const q = Q[i], a = ans[i]; return q.opts.length === 2 ? (a === 0 ? 0 : 2) : a; }
 function pct(v){ return (Math.round(v * 10) / 10) + "%"; }
 function money(base, p){ return (Math.round(base * p / 10) / 10).toLocaleString("zh-TW") + " 萬"; }
 
@@ -474,9 +481,10 @@ function renderResult(){
     if (q.axis === "active") active += score(i);
     if (q.axis === "cash") cash += score(i);
   });
-  const rLv = risk <= 8 ? 0 : risk <= 11 ? 1 : 2;
-  const aLv = active <= 7 ? 0 : 1;
-  const tName = cash <= 3 ? "活水" : cash === 4 ? "兼修" : "蓄勢";
+  const rLv = risk <= 3 ? 0 : risk <= 6 ? 1 : 2;
+  const aLv = active <= 3 ? 0 : 1;
+  const tName = cash <= 1 ? "活水" : cash === 2 ? "兼修" : "蓄勢";
+  const div = 4 - cash; // 配息偏好：越重視配息分數越高
   const rName = GRID[rLv][aLv];
   const R = ROLES[rName], T = TITLES[tName];
 
@@ -497,17 +505,26 @@ function renderResult(){
 
   // 屬性分段量尺
   const axes = [
-    {name:"風險承受度", v:risk, min:5, max:15, label:["低","中","高"][rLv], ends:["低","高"], c:"var(--red)"},
-    {name:"主動程度", v:active, min:4, max:12, label:aLv ? "招式派（主動）" : "內功派（被動）", ends:["被動","主動"], c:"var(--mint)"},
-    {name:"現金流偏好", v:cash, min:2, max:6, label:tName, ends:["重視配息","重視成長"], c:"var(--gold)"}
+    {name:"風險承受度", v:risk, max:10, label:["低","中","高"][rLv], c:"var(--red)",
+     zones:[["低",0,3],["中",4,6],["高",7,10]]},
+    {name:"主動程度", v:active, max:8, label:aLv ? "招式派" : "內功派", c:"var(--mint)",
+     zones:[["內功派（被動）",0,3],["招式派（主動）",4,8]]},
+    {name:"配息偏好", v:div, max:4, label:tName, c:"var(--gold)",
+     zones:[["蓄勢",0,1],["兼修",2,2],["活水",3,4]], ends:["重視成長","重視配息"]}
   ];
   $("axes").innerHTML = axes.map(x => {
-    const n = x.max - x.min + 1, on = x.v - x.min + 1;
     let s = '';
-    for (let k = 1; k <= n; k++) s += '<i' + (k <= on ? ' class="on"' : '') + '></i>';
-    return '<div class="axis" style="--c:' + x.c + '"><div class="row"><b>' + x.name + '</b><em>' + x.label + '（' + x.v + ' 分）</em></div>' +
-      '<div class="seg" style="grid-template-columns:repeat(' + n + ',1fr)">' + s + '</div>' +
-      '<div class="ends"><span>' + x.ends[0] + '</span><span>' + x.ends[1] + '</span></div></div>';
+    for (let k = 1; k <= x.max; k++) s += '<i' + (k <= x.v ? ' class="on"' : '') + '></i>';
+    const z = x.zones.map(([t, a, b]) => {
+      const from = Math.max(a, 1), to = Math.max(b, 1);
+      const me = x.v >= a && x.v <= b;
+      return '<span class="' + (me ? 'me' : '') + '" style="grid-column:' + from + ' / ' + (to + 1) + '">' + t + '</span>';
+    }).join("");
+    return '<div class="axis" style="--c:' + x.c + '"><div class="row"><b>' + x.name + '<span class="tagc">' + x.label + '</span></b>' +
+      '<span class="score"><strong>' + x.v + '</strong>/ ' + x.max + ' 分</span></div>' +
+      '<div class="seg" style="grid-template-columns:repeat(' + x.max + ',1fr)">' + s + '</div>' +
+      '<div class="zones" style="grid-template-columns:repeat(' + x.max + ',1fr)">' + z + '</div>' +
+      (x.ends ? '<div class="ends"><span>← ' + x.ends[0] + '</span><span>' + x.ends[1] + ' →</span></div>' : '') + '</div>';
   }).join("");
 
   // 武林地圖
