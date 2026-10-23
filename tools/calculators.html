@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>通膨與複利計算機｜許仙秘笈投資學院</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#E8543E; --red-dark:#C43F2C;
+    --teal:#2FB6A6; --teal-dark:#1F8F82;
+    --gold:#F0B429; --gold-dark:#9A6B0C;
+    --blue:#2F6FB6; --blue-dark:#1D4E8F;
+    --cream:#FFF8F3; --card:#FFFFFF;
+    --ink:#2E3440; --muted:#6B7280;
+    --pink-bg:#FDEDE9; --mint-bg:#E7F7F4; --gold-bg:#FEF6E0; --blue-bg:#E8F0FA;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 92% -6%, #E7F7F4 0%, transparent 42%),
+      radial-gradient(circle at -8% 90%, #FEF6E0 0%, transparent 40%),
+      var(--cream);
+    min-height:100vh; font-family:'Noto Sans TC', sans-serif; color:var(--ink);
+    padding:28px 18px 60px;
+  }
+  .wrap{max-width:960px;margin:0 auto;}
+  a.back{display:inline-block;margin-bottom:14px;color:var(--muted);font-size:13px;text-decoration:none;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--red);font-size:14px;letter-spacing:.04em;margin-bottom:10px;}
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block;}
+  h1{font-size:clamp(26px,4.2vw,38px);font-weight:900;margin:0 0 10px;}
+  .sub{color:var(--muted);font-size:15.5px;line-height:1.6;margin:0 0 22px;max-width:680px;}
+
+  .toggle-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px;}
+  .toggle-btn{
+    border:2px solid transparent; cursor:pointer; font-family:'Noto Sans TC',sans-serif;
+    font-weight:700; font-size:14px; padding:11px 18px; border-radius:999px;
+    background:#F1F1EC; color:var(--muted); transition:all .15s ease; display:flex; align-items:center; gap:8px;
+  }
+  .toggle-btn .dot{width:9px;height:9px;border-radius:50%;background:currentColor;opacity:.4;}
+  .toggle-btn.active .dot{opacity:1;}
+  .toggle-btn[data-tool="inflation"].active{background:var(--pink-bg);color:var(--red-dark);border-color:var(--red);}
+  .toggle-btn[data-tool="compound"].active{background:var(--mint-bg);color:var(--teal-dark);border-color:var(--teal);}
+  .toggle-btn[data-tool="combo"].active{background:var(--gold-bg);color:var(--gold-dark);border-color:var(--gold);}
+  .toggle-btn[data-tool="etf"].active{background:var(--blue-bg);color:var(--blue-dark);border-color:var(--blue);}
+
+  .panel-section{display:none;margin-bottom:28px;}
+  .panel-section.show{display:block;}
+
+  .section-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .section-head .tag{
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:12px; padding:4px 11px; border-radius:999px; color:#fff;
+  }
+  .section-head h2{font-size:19px;margin:0;font-weight:700;}
+
+  .panel{
+    background:var(--card);border-radius:24px;box-shadow:0 12px 36px rgba(46,52,64,0.08);
+    padding:26px;display:grid;grid-template-columns:1fr 1fr;gap:26px;
+  }
+  @media (max-width:760px){ .panel{grid-template-columns:1fr;} }
+
+  label{display:block;font-weight:700;font-size:13.5px;margin-bottom:7px;}
+  .field{margin-bottom:18px;}
+  .field:last-child{margin-bottom:0;}
+
+  .amount-input{
+    width:100%;font-family:'Fredoka',sans-serif;font-size:20px;font-weight:600;
+    border:2px solid #eee;border-radius:12px;padding:10px 14px;outline:none;
+  }
+  .row-between{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;}
+  .val{font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;}
+
+  input[type=range]{-webkit-appearance:none;width:100%;height:7px;border-radius:6px;background:#EEE;outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.15); border:5px solid currentColor;}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;cursor:pointer;border:5px solid currentColor;}
+
+  .presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;}
+  .preset-btn{border:none;cursor:pointer;background:#F3F1EC;color:var(--ink);padding:7px 12px;border-radius:999px;font-weight:700;font-size:12px;transition:transform .1s;}
+  .preset-btn:hover{transform:translateY(-1px);}
+
+  .toggle-check{display:flex;align-items:center;gap:10px;margin-top:4px;cursor:pointer;user-select:none;}
+  .toggle-check input{width:20px;height:20px;accent-color:var(--blue);cursor:pointer;}
+  .toggle-check span{font-weight:700;font-size:14px;}
+
+  .result{
+    border-radius:18px;color:#fff;padding:22px 20px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;
+  }
+  .result::after{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.10);}
+  .result-label{font-size:12px;font-weight:700;opacity:.9;margin-bottom:5px;}
+  .result-big{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(28px,4.6vw,40px);line-height:1.05;margin-bottom:4px;}
+  .result-note{font-size:12.5px;opacity:.95;margin-bottom:16px;}
+  .result-split{display:flex;flex-direction:column;gap:8px;position:relative;z-index:1;}
+  .split-item{background:rgba(255,255,255,0.14);border-radius:12px;padding:10px 13px;display:flex;justify-content:space-between;align-items:center;}
+  .split-item .k{font-size:12px;opacity:.9;}
+  .split-item .v{font-family:'Fredoka',sans-serif;font-weight:600;font-size:16px;}
+
+  .chart-card{margin-top:16px;background:var(--card);border-radius:24px;box-shadow:0 12px 36px rgba(46,52,64,0.08);padding:22px 24px 16px;}
+  .chart-title{font-weight:700;font-size:14px;margin-bottom:2px;}
+  .chart-sub{color:var(--muted);font-size:12.5px;margin-bottom:12px;}
+  .legend{display:flex;gap:16px;margin-bottom:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot2{width:10px;height:10px;border-radius:50%;display:inline-block;}
+  canvas{width:100%;display:block;cursor:crosshair;touch-action:pan-y;}
+  .chart-hint{font-size:11px;color:var(--muted);margin-top:6px;}
+
+  .disclaimer{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;background:#F7F7F4;border-radius:10px;padding:10px 12px;}
+
+  .etf-sub-block{background:var(--card);border-radius:24px;box-shadow:0 12px 36px rgba(46,52,64,0.08);padding:24px;margin-bottom:18px;}
+  .etf-sub-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .etf-sub-head .dot3{width:12px;height:12px;border-radius:50%;}
+  .etf-sub-head h3{font-size:16px;margin:0;font-weight:700;}
+  .etf-shared{background:var(--card);border-radius:24px;box-shadow:0 12px 36px rgba(46,52,64,0.08);padding:20px 24px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:24px;align-items:center;}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:34px;letter-spacing:.03em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">← 回到工具箱</a>
+  <div class="eyebrow">許仙秘笈投資學院・課堂工具</div>
+  <h1>通膨與複利計算機</h1>
+  <p class="sub">點下面的按鈕切換要看的工具；圖表都可以把手指／滑鼠移到線上，看每一年的確切數值。</p>
+
+  <div class="toggle-row">
+    <button class="toggle-btn active" data-tool="inflation"><span class="dot"></span>通膨購買力計算機</button>
+    <button class="toggle-btn" data-tool="compound"><span class="dot"></span>複利計算器</button>
+    <button class="toggle-btn" data-tool="combo"><span class="dot"></span>複利＋通膨聯合計算機</button>
+    <button class="toggle-btn" data-tool="etf"><span class="dot"></span>0050／0056 報酬率試算機</button>
+  </div>
+
+  <!-- ========== 通膨購買力計算機 ========== -->
+  <div class="panel-section show" id="section-inflation">
+    <div class="section-head">
+      <span class="tag" style="background:var(--red);">通膨</span>
+      <h2>通膨購買力計算機</h2>
+    </div>
+    <div class="panel">
+      <div class="controls">
+        <div class="field">
+          <label>現在的金額（元）</label>
+          <input class="amount-input" type="text" id="infl-amount" inputmode="numeric" value="1,000,000" style="border-color:#F1E4DF;background:var(--pink-bg);color:var(--red-dark);">
+        </div>
+        <div class="field">
+          <div class="row-between"><label style="margin:0;">每年通膨率</label><span class="val" id="infl-rateVal" style="color:var(--red-dark);">2%</span></div>
+          <input type="range" id="infl-rate" min="0" max="8" step="0.5" value="2" style="color:var(--red);">
+        </div>
+        <div class="field">
+          <div class="row-between"><label style="margin:0;">經過幾年</label><span class="val" id="infl-yearsVal" style="color:var(--gold-dark);">20 年</span></div>
+          <input type="range" id="infl-years" min="1" max="40" step="1" value="20" style="color:var(--gold);">
+        </div>
+        <div class="presets">
+          <button class="preset-btn" data-rate="3" data-years="10">溫和通膨 3%／10年</button>
+          <button class="preset-btn" data-rate="2" data-years="20">長期典型 2%／20年</button>
+          <button class="preset-btn" data-rate="5" data-years="15">高通膨 5%／15年</button>
+        </div>
+      </div>
+      <div class="result" style="background:linear-gradient(165deg, var(--red) 0%, var(--red-dark) 100%);">
+        <div>
+          <div class="result-label">N 年後，實質購買力剩下</div>
+          <div class="result-big" id="infl-pctRemain">67.3%</div>
+          <div class="result-note" id="infl-resultNote">相當於現在的購買力打了 6.7 折</div>
+        </div>
+        <div class="result-split">
+          <div class="split-item"><div class="k">現在</div><div class="v" id="infl-nowAmount">100萬</div></div>
+          <div class="split-item"><div class="k">N 年後等值購買力</div><div class="v" id="infl-futureAmount">67.3萬</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">購買力隨時間變化</div>
+      <div class="chart-sub" id="infl-chartSub">從第 0 年到第 20 年，每一年剩下的購買力</div>
+      <canvas id="infl-chart" height="200"></canvas>
+      <div class="chart-hint">👆 把滑鼠／手指移到線上，可以看每一年的確切數值</div>
+    </div>
+  </div>
+
+  <!-- ========== 複利計算器 ========== -->
+  <div class="panel-section" id="section-compound">
+    <div class="section-head">
+      <span class="tag" style="background:var(--teal);">複利</span>
+      <h2>複利計算器</h2>
+    </div>
+    <div class="panel">
+      <div class="controls">
+        <div class="field">
+          <label>本金（元）</label>
+          <input class="amount-input" type="text" id="cp-principal" inputmode="numeric" value="100,000" style="border-color:#DCEEEA;background:var(--mint-bg);color:var(--teal-dark);">
+        </div>
+        <div class="field">
+          <label>每月定期定額投入（元，可留 0）</label>
+          <input class="amount-input" type="text" id="cp-monthly" inputmode="numeric" value="5,000" style="border-color:#DCEEEA;background:var(--mint-bg);color:var(--teal-dark);font-size:16px;">
+        </div>
+        <div class="field">
+          <div class="row-between"><label style="margin:0;">年化報酬率</label><span class="val" id="cp-rateVal" style="color:var(--red-dark);">6%</span></div>
+          <input type="range" id="cp-rate" min="0" max="15" step="0.5" value="6" style="color:var(--red);">
+        </div>
+        <div class="field">
+          <div class="row-between"><label style="margin:0;">投資年數</label><span class="val" id="cp-yearsVal" style="color:var(--gold-dark);">20 年</span></div>
+          <input type="range" id="cp-years" min="1" max="40" step="1" value="20" style="color:var(--gold);">
+        </div>
+        <div class="presets">
+          <button class="preset-btn" data-p="100000" data-m="0" data-rate="6" data-years="20">單筆 10萬／6%／20年</button>
+          <button class="preset-btn" data-p="0" data-m="5000" data-rate="6" data-years="30">月存5000／6%／30年</button>
+          <button class="preset-btn" data-p="0" data-m="3000" data-rate="7" data-years="40">25歲開始／月存3000</button>
+        </div>
+      </div>
+      <div class="result" style="background:linear-gradient(165deg, var(--teal) 0%, var(--teal-dark) 100%);">
+        <div>
+          <div class="result-label">投資期滿，複利終值</div>
+          <div class="result-big" id="cp-finalValue">368萬</div>
+          <div class="result-note" id="cp-resultNote">比單利多賺了 152萬</div>
+        </div>
+        <div class="result-split">
+          <div class="split-item"><div class="k">總共投入本金</div><div class="v" id="cp-totalInvested">220萬</div></div>
+          <div class="split-item"><div class="k">複利滾出的獲利</div><div class="v" id="cp-totalGain">148萬</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">複利 vs 單利，成長曲線對比</div>
+      <div class="chart-sub" id="cp-chartSub">同樣本金、同樣報酬率，時間拉越長，差距越明顯</div>
+      <div class="legend">
+        <span><span class="dot2" style="background:#2FB6A6;"></span>複利成長</span>
+        <span><span class="dot2" style="background:#C9CDD3;"></span>單利成長</span>
+      </div>
+      <canvas id="cp-chart" height="200"></canvas>
+      <div class="chart-hint">👆 把滑鼠／手指移到線上，可以看每一年的確切數值</div>
+    </div>
+  </div>
+
+  <!-- ========== 複利＋通膨聯合計算機 ========== -->
+  <div class="panel-section" id="section-combo">
+    <div class="section-head">
+      <span class="tag" style="background:var(--gold);color:var(--gold-dark);">複利＋通膨</span>
+      <h2>複利＋通膨聯合計算機</h2>
+    </div>
+    <div class="panel">
+      <div class="controls">
+        <div class="field">
+          <label>本金（元）</label>
+          <input class="amount-input" type="text" id="cb-principal" inputmode="numeric" value="100,000" style="border-color:#F3E6C4;background:var(--gold-bg);color:var(--gold-dark);">
+        </div>
+        <div class="field">
+          <label>每月定期定額投入（元，可留 0）</label>
+          <input class="amount-input" type="text" id="cb-monthly" inputmode="numeric" value="5,000" style="border-color:#F3E6C4;background:var(--gold-bg);color:var(--gold-dark);font-size:16px;">
+        </div>
+        <div class="field">
+          <div class="row-between"><label style="margin:0;">年化投資報酬率</label><span class="val" id="cb-rateVal" style="color:var(--teal-dark);">6%</span></div>
+          <input type="range" id="cb-rate" min="0" max="15" step="0.5" value="6" style="color:var(--teal);">
+        </div>
+        <div class="field">
+          <div class="row-between"><label style="margin:0;">每年通膨率</label><span class="val" id="cb-inflVal" style="color:var(--red-dark);">2%</span></div>
+          <input type="range" id="cb-infl" min="0" max="8" step="0.5" value="2" style="color:var(--red);">
+        </div>
+        <div class="field">
+          <div class="row-between"><label style="margin:0;">投資年數</label><span class="val" id="cb-yearsVal" style="color:var(--gold-dark);">15 年</span></div>
+          <input type="range" id="cb-years" min="1" max="40" step="1" value="15" style="color:var(--gold);">
+        </div>
+        <div class="presets">
+          <button class="preset-btn" data-p="100000" data-m="0" data-rate="6" data-infl="2" data-years="15">典型情境 6%報酬／2%通膨</button>
+          <button class="preset-btn" data-p="0" data-m="3000" data-rate="7" data-infl="3" data-years="30">積極情境 7%報酬／3%通膨</button>
+        </div>
+      </div>
+      <div class="result" style="background:linear-gradient(165deg, #F0B429 0%, #C48A0E 100%);">
+        <div>
+          <div class="result-label">扣掉通膨後，實質購買力終值</div>
+          <div class="result-big" id="cb-realValue">10萬</div>
+          <div class="result-note" id="cb-resultNote">名目終值看起來是 13.5萬，但實際只值 10萬</div>
+        </div>
+        <div class="result-split">
+          <div class="split-item"><div class="k">名目終值（帳面數字）</div><div class="v" id="cb-nominalValue">13.5萬</div></div>
+          <div class="split-item"><div class="k">實質終值（扣通膨）</div><div class="v" id="cb-realValue2">10萬</div></div>
+          <div class="split-item"><div class="k">通膨吃掉的部分</div><div class="v" id="cb-erodedValue">3.5萬</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">名目終值 vs 實質購買力終值</div>
+      <div class="chart-sub" id="cb-chartSub">帳面上錢變多了，但扣掉通膨，真正的購買力成長沒有想像中多</div>
+      <div class="legend">
+        <span><span class="dot2" style="background:#F0B429;"></span>名目終值（未扣通膨）</span>
+        <span><span class="dot2" style="background:#2FB6A6;"></span>實質終值（扣通膨後）</span>
+      </div>
+      <canvas id="cb-chart" height="200"></canvas>
+      <div class="chart-hint">👆 把滑鼠／手指移到線上，可以看每一年的確切數值</div>
+    </div>
+  </div>
+
+  <!-- ========== 0050/0056 報酬率試算機 ========== -->
+  <div class="panel-section" id="section-etf">
+    <div class="section-head">
+      <span class="tag" style="background:var(--blue);">ETF比較</span>
+      <h2>0050／0056 報酬率試算機</h2>
+    </div>
+
+    <div class="etf-shared">
+      <div style="flex:1;min-width:180px;">
+        <div class="row-between"><label style="margin:0;">投資年數（共用）</label><span class="val" id="etf-yearsVal" style="color:var(--blue-dark);">10 年</span></div>
+        <input type="range" id="etf-years" min="1" max="30" step="1" value="10" style="color:var(--blue);">
+      </div>
+      <label class="toggle-check">
+        <input type="checkbox" id="etf-reinvest" checked>
+        <span>股息再投入（三個區塊共用這個設定）</span>
+      </label>
+    </div>
+
+    <!-- 0050 獨立區塊 -->
+    <div class="etf-sub-block">
+      <div class="etf-sub-head"><span class="dot3" style="background:var(--blue);"></span><h3>0050（大盤型）</h3></div>
+      <div class="panel" style="padding:0;box-shadow:none;border-radius:0;">
+        <div class="controls">
+          <div class="field">
+            <label>投入金額（元）</label>
+            <input class="amount-input" type="text" id="etf50-principal" inputmode="numeric" value="1,000,000" style="border-color:#D6E4F5;background:var(--blue-bg);color:var(--blue-dark);">
+          </div>
+          <div class="field">
+            <div class="row-between"><label style="margin:0;">年化股價成長率</label><span class="val" id="etf50-rateVal" style="color:var(--blue-dark);">14.8%</span></div>
+            <input type="range" id="etf50-rate" min="0" max="25" step="0.1" value="14.8" style="color:var(--blue);">
+          </div>
+          <div class="field">
+            <div class="row-between"><label style="margin:0;">平均殖利率</label><span class="val" id="etf50-yieldVal" style="color:var(--blue-dark);">2.75%</span></div>
+            <input type="range" id="etf50-yield" min="0" max="12" step="0.05" value="2.75" style="color:var(--blue);">
+          </div>
+        </div>
+        <div class="result" style="background:linear-gradient(165deg, var(--blue) 0%, var(--blue-dark) 100%);">
+          <div>
+            <div class="result-label">0050 投資期滿終值</div>
+            <div class="result-big" id="etf50-finalValue">—</div>
+            <div class="result-note" id="etf50-resultNote">—</div>
+          </div>
+          <div class="result-split">
+            <div class="split-item"><div class="k">投入本金</div><div class="v" id="etf50-invested">—</div></div>
+            <div class="split-item" id="etf50-priceRow"><div class="k">股價本身價值</div><div class="v" id="etf50-priceValue">—</div></div>
+            <div class="split-item" id="etf50-divRow"><div class="k">累積領出股息</div><div class="v" id="etf50-divValue">—</div></div>
+            <div class="split-item"><div class="k">總獲利</div><div class="v" id="etf50-gain">—</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card" style="box-shadow:none;padding:16px 0 0;margin-top:14px;">
+        <div class="chart-title">0050 資產成長曲線</div>
+        <div class="chart-sub" id="etf50-chartSub">—</div>
+        <canvas id="etf50-chart" height="180"></canvas>
+        <div class="chart-hint">👆 把滑鼠／手指移到線上，可以看每一年的確切數值</div>
+      </div>
+    </div>
+
+    <!-- 0056 獨立區塊 -->
+    <div class="etf-sub-block">
+      <div class="etf-sub-head"><span class="dot3" style="background:var(--gold);"></span><h3>0056（高股息型）</h3></div>
+      <div class="panel" style="padding:0;box-shadow:none;border-radius:0;">
+        <div class="controls">
+          <div class="field">
+            <label>投入金額（元）</label>
+            <input class="amount-input" type="text" id="etf56-principal" inputmode="numeric" value="1,000,000" style="border-color:#F3E6C4;background:var(--gold-bg);color:var(--gold-dark);">
+          </div>
+          <div class="field">
+            <div class="row-between"><label style="margin:0;">年化股價成長率</label><span class="val" id="etf56-rateVal" style="color:var(--gold-dark);">4.7%</span></div>
+            <input type="range" id="etf56-rate" min="0" max="25" step="0.1" value="4.7" style="color:var(--gold);">
+          </div>
+          <div class="field">
+            <div class="row-between"><label style="margin:0;">平均殖利率</label><span class="val" id="etf56-yieldVal" style="color:var(--gold-dark);">7.5%</span></div>
+            <input type="range" id="etf56-yield" min="0" max="12" step="0.05" value="7.5" style="color:var(--gold);">
+          </div>
+        </div>
+        <div class="result" style="background:linear-gradient(165deg, var(--gold) 0%, var(--gold-dark) 100%);">
+          <div>
+            <div class="result-label">0056 投資期滿終值</div>
+            <div class="result-big" id="etf56-finalValue">—</div>
+            <div class="result-note" id="etf56-resultNote">—</div>
+          </div>
+          <div class="result-split">
+            <div class="split-item"><div class="k">投入本金</div><div class="v" id="etf56-invested">—</div></div>
+            <div class="split-item" id="etf56-priceRow"><div class="k">股價本身價值</div><div class="v" id="etf56-priceValue">—</div></div>
+            <div class="split-item" id="etf56-divRow"><div class="k">累積領出股息</div><div class="v" id="etf56-divValue">—</div></div>
+            <div class="split-item"><div class="k">總獲利</div><div class="v" id="etf56-gain">—</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card" style="box-shadow:none;padding:16px 0 0;margin-top:14px;">
+        <div class="chart-title">0056 資產成長曲線</div>
+        <div class="chart-sub" id="etf56-chartSub">—</div>
+        <canvas id="etf56-chart" height="180"></canvas>
+        <div class="chart-hint">👆 把滑鼠／手指移到線上，可以看每一年的確切數值</div>
+      </div>
+    </div>
+
+    <!-- 比較區塊 -->
+    <div class="etf-sub-block">
+      <div class="etf-sub-head"><span class="dot3" style="background:linear-gradient(90deg,var(--blue),var(--gold));"></span><h3>0050 vs 0056 比較</h3></div>
+      <div class="result" style="background:linear-gradient(165deg, #4B5563 0%, #2E3440 100%);margin-bottom:14px;">
+        <div>
+          <div class="result-label">投資期滿，兩者終值相差</div>
+          <div class="result-big" id="etf-diffValue">—</div>
+          <div class="result-note" id="etf-diffNote">—</div>
+        </div>
+        <div class="result-split">
+          <div class="split-item"><div class="k">0050 終值</div><div class="v" id="etf-cmp50">—</div></div>
+          <div class="split-item"><div class="k">0056 終值</div><div class="v" id="etf-cmp56">—</div></div>
+        </div>
+      </div>
+      <div class="chart-card" style="box-shadow:none;padding:0;">
+        <div class="chart-title">0050 vs 0056 成長曲線對比</div>
+        <div class="chart-sub" id="etf-cmpChartSub">—</div>
+        <div class="legend">
+          <span><span class="dot2" style="background:#2F6FB6;"></span>0050</span>
+          <span><span class="dot2" style="background:#F0B429;"></span>0056</span>
+        </div>
+        <canvas id="etf-cmp-chart" height="200"></canvas>
+        <div class="chart-hint">👆 把滑鼠／手指移到線上，可以看每一年兩檔各自的數值</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">＊年化股價成長率、殖利率為概略估算值（依過去股價區間概算，非官方逐年精確含息報酬率），教學示範用，數字可依查到的最新官方數據自行調整滑桿。</div>
+  </div>
+
+  <footer>僅供許仙秘笈投資學院課堂教學使用</footer>
+</div>
+
+<script>
+// ---------- 共用工具函式 ----------
+function parseAmount(str){ const n = parseFloat(String(str).replace(/,/g,'').replace(/[^\d.]/g,'')); return isNaN(n)?0:n; }
+function formatWan(n){ const wan = n/10000; if (Math.abs(wan)>=1) return (Math.round(wan*10)/10).toLocaleString('zh-Hant')+'萬'; return Math.round(n).toLocaleString('zh-Hant')+'元'; }
+
+// ---------- 互動式圖表（可滑動看每年數值） ----------
+function createInteractiveChart(canvas){
+  const ctx = canvas.getContext('2d');
+  let state = null;
+  let hoverIdx = null;
+
+  function resize(){
+    const ratio = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth, h = 200;
+    canvas.width = w*ratio; canvas.height = h*ratio;
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    return {w,h};
+  }
+
+  function frame(){
+    if(!state) return;
+    const {w,h} = resize();
+    ctx.clearRect(0,0,w,h);
+    const padL=8, padR=8, padT=14, padB=26;
+    const plotW=w-padL-padR, plotH=h-padT-padB;
+    const {seriesArr, years, maxV, formatVal} = state;
+
+    ctx.strokeStyle='#EEE'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL,padT+plotH); ctx.lineTo(padL+plotW,padT+plotH); ctx.stroke();
+
+    seriesArr.forEach(s=>{
+      for(let i=0;i<years;i++){
+        const x1=padL+plotW*i/years, y1=padT+plotH-plotH*(s.data[i]/maxV);
+        const x2=padL+plotW*(i+1)/years, y2=padT+plotH-plotH*(s.data[i+1]/maxV);
+        ctx.strokeStyle=s.color; ctx.lineWidth=s.width||3; ctx.lineCap='round';
+        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+      }
+    });
+    seriesArr.forEach(s=>{
+      const lastX=padL+plotW, lastY=padT+plotH-plotH*(s.data[s.data.length-1]/maxV);
+      ctx.beginPath(); ctx.arc(lastX,lastY,5.5,0,Math.PI*2); ctx.fillStyle=s.color; ctx.fill();
+      ctx.beginPath(); ctx.arc(lastX,lastY,5.5,0,Math.PI*2); ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+    });
+
+    ctx.fillStyle='#6B7280'; ctx.font='11px "Noto Sans TC", sans-serif';
+    ctx.textAlign='left'; ctx.fillText('第 0 年', padL, padT+plotH+19);
+    ctx.textAlign='right'; ctx.fillText('第 '+years+' 年', padL+plotW, padT+plotH+19);
+
+    if(hoverIdx!==null){
+      const hx = padL+plotW*hoverIdx/years;
+      ctx.save();
+      ctx.strokeStyle='#B8BEC7'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+      ctx.beginPath(); ctx.moveTo(hx,padT); ctx.lineTo(hx,padT+plotH); ctx.stroke();
+      ctx.restore();
+
+      const pts = seriesArr.map(s=>({
+        color:s.color, label:s.label||'',
+        val: s.data[hoverIdx],
+        y: padT+plotH-plotH*(s.data[hoverIdx]/maxV)
+      }));
+      pts.forEach(p=>{
+        ctx.beginPath(); ctx.arc(hx,p.y,4.5,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill();
+        ctx.beginPath(); ctx.arc(hx,p.y,4.5,0,Math.PI*2); ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+      });
+
+      const fmt = formatVal || (v=>formatWan(v));
+      const lines = ['第 '+hoverIdx+' 年'].concat(pts.map(p=> (p.label?p.label+'：':'')+fmt(p.val)));
+      ctx.font='11.5px "Noto Sans TC", sans-serif';
+      const boxW = Math.max(...lines.map(t=>ctx.measureText(t).width)) + 18;
+      const boxH = lines.length*17+10;
+      let boxX = hx+10; if(boxX+boxW>w-2) boxX = hx-boxW-10;
+      let boxY = padT+2;
+      ctx.fillStyle='rgba(46,52,64,0.94)';
+      ctx.beginPath();
+      if(ctx.roundRect){ ctx.roundRect(boxX,boxY,boxW,boxH,8); } else { ctx.rect(boxX,boxY,boxW,boxH); }
+      ctx.fill();
+      ctx.textAlign='left';
+      lines.forEach((t,i)=>{
+        ctx.fillStyle = i===0 ? '#C9CDD3' : '#fff';
+        ctx.font = i===0 ? '10.5px "Noto Sans TC", sans-serif' : 'bold 12px "Noto Sans TC", sans-serif';
+        ctx.fillText(t, boxX+9, boxY+16+i*17-2);
+      });
+    }
+  }
+
+  function idxFromClientX(clientX){
+    const rect = canvas.getBoundingClientRect();
+    const padL=8;
+    const plotW = rect.width-16;
+    const years = state ? state.years : 1;
+    let idx = Math.round(((clientX-rect.left-padL)/plotW)*years);
+    if(idx<0) idx=0; if(idx>years) idx=years;
+    return idx;
+  }
+
+  canvas.addEventListener('mousemove', e=>{ hoverIdx = idxFromClientX(e.clientX); frame(); });
+  canvas.addEventListener('mouseleave', ()=>{ hoverIdx=null; frame(); });
+  canvas.addEventListener('touchstart', e=>{ if(e.touches[0]){ hoverIdx=idxFromClientX(e.touches[0].clientX); frame(); } }, {passive:true});
+  canvas.addEventListener('touchmove', e=>{ if(e.touches[0]){ hoverIdx=idxFromClientX(e.touches[0].clientX); frame(); e.preventDefault(); } }, {passive:false});
+
+  window.addEventListener('resize', frame);
+
+  return {
+    setData(seriesArr, years, maxV, formatVal){ state = {seriesArr, years, maxV, formatVal}; frame(); },
+    render: frame
+  };
+}
+
+// ================= 通膨購買力計算機 =================
+(function(){
+  const amountInput = document.getElementById('infl-amount');
+  const rateInput = document.getElementById('infl-rate');
+  const yearsInput = document.getElementById('infl-years');
+  const rateVal = document.getElementById('infl-rateVal');
+  const yearsVal = document.getElementById('infl-yearsVal');
+  const pctRemain = document.getElementById('infl-pctRemain');
+  const resultNote = document.getElementById('infl-resultNote');
+  const nowAmount = document.getElementById('infl-nowAmount');
+  const futureAmount = document.getElementById('infl-futureAmount');
+  const chartSub = document.getElementById('infl-chartSub');
+  const chart = createInteractiveChart(document.getElementById('infl-chart'));
+
+  function update(){
+    const amount = parseAmount(amountInput.value);
+    const rate = parseFloat(rateInput.value);
+    const years = parseInt(yearsInput.value);
+    rateVal.textContent = rate+'%'; yearsVal.textContent = years+' 年';
+    const points = [];
+    for(let y=0;y<=years;y++){ points.push(amount / Math.pow(1+rate/100,y)); }
+    const future = points[points.length-1];
+    const pct = amount>0 ? (future/amount*100) : 0;
+    pctRemain.textContent = pct.toFixed(1)+'%';
+    resultNote.textContent = '相當於現在的購買力打了 '+(pct/10).toFixed(1)+' 折';
+    nowAmount.textContent = formatWan(amount);
+    futureAmount.textContent = formatWan(future);
+    chartSub.textContent = '從第 0 年到第 '+years+' 年，每一年剩下的購買力';
+    chart.setData([{data:points, color:'#E8543E', width:3, label:'購買力'}], years, amount||1);
+  }
+  amountInput.addEventListener('input',(e)=>{ const raw=parseAmount(e.target.value); e.target.value=raw?raw.toLocaleString('zh-Hant'):''; update(); });
+  amountInput.addEventListener('blur',()=>{ amountInput.value=parseAmount(amountInput.value).toLocaleString('zh-Hant'); });
+  rateInput.addEventListener('input', update);
+  yearsInput.addEventListener('input', update);
+  document.querySelectorAll('#section-inflation .preset-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ rateInput.value=btn.dataset.rate; yearsInput.value=btn.dataset.years; update(); });
+  });
+  window.__updateInflation = update;
+  update();
+})();
+
+// ================= 複利計算器 =================
+(function(){
+  const principalInput = document.getElementById('cp-principal');
+  const monthlyInput = document.getElementById('cp-monthly');
+  const rateInput = document.getElementById('cp-rate');
+  const yearsInput = document.getElementById('cp-years');
+  const rateVal = document.getElementById('cp-rateVal');
+  const yearsVal = document.getElementById('cp-yearsVal');
+  const finalValue = document.getElementById('cp-finalValue');
+  const resultNote = document.getElementById('cp-resultNote');
+  const totalInvested = document.getElementById('cp-totalInvested');
+  const totalGain = document.getElementById('cp-totalGain');
+  const chartSub = document.getElementById('cp-chartSub');
+  const chart = createInteractiveChart(document.getElementById('cp-chart'));
+
+  function compoundSeries(principal, monthly, annualRate, years){
+    const r = annualRate/100;
+    const series = [principal];
+    if(monthly===0){ for(let y=1;y<=years;y++){ series.push(principal*Math.pow(1+r,y)); } return series; }
+    const monthlyRate=r/12; let balance=principal;
+    for(let y=1;y<=years;y++){ for(let m=0;m<12;m++){ balance=balance*(1+monthlyRate)+monthly; } series.push(balance); }
+    return series;
+  }
+  function simpleSeries(principal, monthly, annualRate, years){
+    const r=annualRate/100; let bal=principal, invested=principal; const out=[principal];
+    for(let y=1;y<=years;y++){ invested+=monthly*12; const interest=invested*r; bal+=interest+monthly*12; out.push(bal); }
+    return out;
+  }
+  function update(){
+    const principal=parseAmount(principalInput.value), monthly=parseAmount(monthlyInput.value);
+    const rate=parseFloat(rateInput.value), years=parseInt(yearsInput.value);
+    rateVal.textContent=rate+'%'; yearsVal.textContent=years+' 年';
+    const cSeries=compoundSeries(principal,monthly,rate,years);
+    const sSeries=simpleSeries(principal,monthly,rate,years);
+    const finalC=cSeries[cSeries.length-1], finalS=sSeries[sSeries.length-1];
+    const invested=principal+monthly*12*years;
+    finalValue.textContent=formatWan(finalC);
+    resultNote.textContent='比單利多賺了 '+formatWan(Math.max(finalC-finalS,0));
+    totalInvested.textContent=formatWan(invested);
+    totalGain.textContent=formatWan(finalC-invested);
+    chartSub.textContent='本金 '+formatWan(principal)+'，每月投入 '+formatWan(monthly)+'，年化 '+rate+'%，共 '+years+' 年';
+    const maxV = Math.max(finalC, finalS)||1;
+    chart.setData([{data:sSeries,color:'#C9CDD3',width:2.5,label:'單利'},{data:cSeries,color:'#2FB6A6',width:3,label:'複利'}], years, maxV);
+  }
+  principalInput.addEventListener('input',(e)=>{ const raw=parseAmount(e.target.value); e.target.value=raw?raw.toLocaleString('zh-Hant'):''; update(); });
+  principalInput.addEventListener('blur',()=>{ principalInput.value=parseAmount(principalInput.value).toLocaleString('zh-Hant'); });
+  monthlyInput.addEventListener('input',(e)=>{ const raw=parseAmount(e.target.value); e.target.value=raw?raw.toLocaleString('zh-Hant'):'0'; update(); });
+  monthlyInput.addEventListener('blur',()=>{ monthlyInput.value=parseAmount(monthlyInput.value).toLocaleString('zh-Hant'); });
+  rateInput.addEventListener('input', update);
+  yearsInput.addEventListener('input', update);
+  document.querySelectorAll('#section-compound .preset-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      principalInput.value=Number(btn.dataset.p).toLocaleString('zh-Hant');
+      monthlyInput.value=Number(btn.dataset.m).toLocaleString('zh-Hant');
+      rateInput.value=btn.dataset.rate; yearsInput.value=btn.dataset.years; update();
+    });
+  });
+  window.__updateCompound = update;
+  update();
+})();
+
+// ================= 複利＋通膨聯合計算機 =================
+(function(){
+  const principalInput = document.getElementById('cb-principal');
+  const monthlyInput = document.getElementById('cb-monthly');
+  const rateInput = document.getElementById('cb-rate');
+  const inflInput = document.getElementById('cb-infl');
+  const yearsInput = document.getElementById('cb-years');
+  const rateVal = document.getElementById('cb-rateVal');
+  const inflVal = document.getElementById('cb-inflVal');
+  const yearsVal = document.getElementById('cb-yearsVal');
+  const realValue = document.getElementById('cb-realValue');
+  const resultNote = document.getElementById('cb-resultNote');
+  const nominalValue = document.getElementById('cb-nominalValue');
+  const realValue2 = document.getElementById('cb-realValue2');
+  const erodedValue = document.getElementById('cb-erodedValue');
+  const chartSub = document.getElementById('cb-chartSub');
+  const chart = createInteractiveChart(document.getElementById('cb-chart'));
+
+  function nominalSeries(principal, monthly, annualRate, years){
+    const r=annualRate/100; const series=[principal];
+    if(monthly===0){ for(let y=1;y<=years;y++){ series.push(principal*Math.pow(1+r,y)); } return series; }
+    const monthlyRate=r/12; let balance=principal;
+    for(let y=1;y<=years;y++){ for(let m=0;m<12;m++){ balance=balance*(1+monthlyRate)+monthly; } series.push(balance); }
+    return series;
+  }
+  function realSeries(nominal, inflationRate){ return nominal.map((v,i)=> v/Math.pow(1+inflationRate/100,i)); }
+  function update(){
+    const principal=parseAmount(principalInput.value), monthly=parseAmount(monthlyInput.value);
+    const rate=parseFloat(rateInput.value), infl=parseFloat(inflInput.value), years=parseInt(yearsInput.value);
+    rateVal.textContent=rate+'%'; inflVal.textContent=infl+'%'; yearsVal.textContent=years+' 年';
+    const nSeries=nominalSeries(principal,monthly,rate,years);
+    const rSeries=realSeries(nSeries,infl);
+    const finalN=nSeries[nSeries.length-1], finalR=rSeries[rSeries.length-1];
+    realValue.textContent=formatWan(finalR);
+    nominalValue.textContent=formatWan(finalN);
+    realValue2.textContent=formatWan(finalR);
+    erodedValue.textContent=formatWan(Math.max(finalN-finalR,0));
+    resultNote.textContent='名目終值看起來是 '+formatWan(finalN)+'，但實際能買到的東西只值 '+formatWan(finalR);
+    chartSub.textContent='本金 '+formatWan(principal)+'，每月投入 '+formatWan(monthly)+'，報酬率 '+rate+'%，通膨 '+infl+'%，共 '+years+' 年';
+    const maxV = Math.max(finalN, finalR)||1;
+    chart.setData([{data:nSeries,color:'#F0B429',width:3,label:'名目終值'},{data:rSeries,color:'#2FB6A6',width:3,label:'實質終值'}], years, maxV);
+  }
+  principalInput.addEventListener('input',(e)=>{ const raw=parseAmount(e.target.value); e.target.value=raw?raw.toLocaleString('zh-Hant'):''; update(); });
+  principalInput.addEventListener('blur',()=>{ principalInput.value=parseAmount(principalInput.value).toLocaleString('zh-Hant'); });
+  monthlyInput.addEventListener('input',(e)=>{ const raw=parseAmount(e.target.value); e.target.value=raw?raw.toLocaleString('zh-Hant'):'0'; update(); });
+  monthlyInput.addEventListener('blur',()=>{ monthlyInput.value=parseAmount(monthlyInput.value).toLocaleString('zh-Hant'); });
+  rateInput.addEventListener('input', update);
+  inflInput.addEventListener('input', update);
+  yearsInput.addEventListener('input', update);
+  document.querySelectorAll('#section-combo .preset-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      principalInput.value=Number(btn.dataset.p).toLocaleString('zh-Hant');
+      monthlyInput.value=Number(btn.dataset.m).toLocaleString('zh-Hant');
+      rateInput.value=btn.dataset.rate; inflInput.value=btn.dataset.infl; yearsInput.value=btn.dataset.years; update();
+    });
+  });
+  window.__updateCombo = update;
+  update();
+})();
+
+// ================= 0050/0056 報酬率試算機（三個獨立區塊）=================
+(function(){
+  const yearsInput = document.getElementById('etf-years');
+  const yearsVal = document.getElementById('etf-yearsVal');
+  const reinvestCheck = document.getElementById('etf-reinvest');
+
+  const p50 = document.getElementById('etf50-principal');
+  const r50 = document.getElementById('etf50-rate');
+  const y50 = document.getElementById('etf50-yield');
+  const r50Val = document.getElementById('etf50-rateVal');
+  const y50Val = document.getElementById('etf50-yieldVal');
+
+  const p56 = document.getElementById('etf56-principal');
+  const r56 = document.getElementById('etf56-rate');
+  const y56 = document.getElementById('etf56-yield');
+  const r56Val = document.getElementById('etf56-rateVal');
+  const y56Val = document.getElementById('etf56-yieldVal');
+
+  const chart50 = createInteractiveChart(document.getElementById('etf50-chart'));
+  const chart56 = createInteractiveChart(document.getElementById('etf56-chart'));
+  const chartCmp = createInteractiveChart(document.getElementById('etf-cmp-chart'));
+
+  function reinvestSeries(principal, rate, yieldRate, years){
+    const eff = (1+rate/100)*(1+yieldRate/100)-1;
+    const series=[principal];
+    for(let i=1;i<=years;i++){ series.push(series[i-1]*(1+eff)); }
+    return series;
+  }
+  function noReinvestSeries(principal, rate, yieldRate, years){
+    const priceSeries=[principal]; const dividendSeries=[0]; let cumDividend=0; const totalSeries=[principal];
+    for(let i=1;i<=years;i++){
+      const prevPrice = priceSeries[i-1];
+      cumDividend += prevPrice*(yieldRate/100);
+      const newPrice = prevPrice*(1+rate/100);
+      priceSeries.push(newPrice);
+      dividendSeries.push(cumDividend);
+      totalSeries.push(newPrice+cumDividend);
+    }
+    return {totalSeries, priceSeries, dividendSeries};
+  }
+  function getSeries(principal, rate, yieldRate, years, reinvest){
+    if(reinvest) return { totalSeries: reinvestSeries(principal, rate, yieldRate, years), priceSeries:null, dividendSeries:null };
+    return noReinvestSeries(principal, rate, yieldRate, years);
+  }
+
+  function update(){
+    const years = parseInt(yearsInput.value);
+    yearsVal.textContent = years+' 年';
+    const reinvest = reinvestCheck.checked;
+    const modeLabel = reinvest ? '股息已再投入' : '股息領出未再投入';
+
+    const principal50 = parseAmount(p50.value);
+    const rate50 = parseFloat(r50.value), yield50 = parseFloat(y50.value);
+    r50Val.textContent = rate50+'%'; y50Val.textContent = yield50+'%';
+    const result50 = getSeries(principal50, rate50, yield50, years, reinvest);
+    const series50 = result50.totalSeries;
+    const final50 = series50[series50.length-1];
+    document.getElementById('etf50-finalValue').textContent = formatWan(final50);
+    document.getElementById('etf50-resultNote').textContent = modeLabel;
+    document.getElementById('etf50-invested').textContent = formatWan(principal50);
+    document.getElementById('etf50-gain').textContent = formatWan(final50-principal50);
+    if(!reinvest){
+      document.getElementById('etf50-priceRow').style.display='flex';
+      document.getElementById('etf50-divRow').style.display='flex';
+      document.getElementById('etf50-priceValue').textContent = formatWan(result50.priceSeries[result50.priceSeries.length-1]);
+      document.getElementById('etf50-divValue').textContent = formatWan(result50.dividendSeries[result50.dividendSeries.length-1]);
+    } else {
+      document.getElementById('etf50-priceRow').style.display='none';
+      document.getElementById('etf50-divRow').style.display='none';
+    }
+    document.getElementById('etf50-chartSub').textContent = '本金 '+formatWan(principal50)+'，股價年化 '+rate50+'%，殖利率 '+yield50+'%，共 '+years+' 年（'+modeLabel+'）';
+    chart50.setData([{data:series50,color:'#2F6FB6',width:3,label:'0050'}], years, final50||1);
+
+    const principal56 = parseAmount(p56.value);
+    const rate56 = parseFloat(r56.value), yield56 = parseFloat(y56.value);
+    r56Val.textContent = rate56+'%'; y56Val.textContent = yield56+'%';
+    const result56 = getSeries(principal56, rate56, yield56, years, reinvest);
+    const series56 = result56.totalSeries;
+    const final56 = series56[series56.length-1];
+    document.getElementById('etf56-finalValue').textContent = formatWan(final56);
+    document.getElementById('etf56-resultNote').textContent = modeLabel;
+    document.getElementById('etf56-invested').textContent = formatWan(principal56);
+    document.getElementById('etf56-gain').textContent = formatWan(final56-principal56);
+    if(!reinvest){
+      document.getElementById('etf56-priceRow').style.display='flex';
+      document.getElementById('etf56-divRow').style.display='flex';
+      document.getElementById('etf56-priceValue').textContent = formatWan(result56.priceSeries[result56.priceSeries.length-1]);
+      document.getElementById('etf56-divValue').textContent = formatWan(result56.dividendSeries[result56.dividendSeries.length-1]);
+    } else {
+      document.getElementById('etf56-priceRow').style.display='none';
+      document.getElementById('etf56-divRow').style.display='none';
+    }
+    document.getElementById('etf56-chartSub').textContent = '本金 '+formatWan(principal56)+'，股價年化 '+rate56+'%，殖利率 '+yield56+'%，共 '+years+' 年（'+modeLabel+'）';
+    chart56.setData([{data:series56,color:'#F0B429',width:3,label:'0056'}], years, final56||1);
+
+    const diff = final50-final56;
+    document.getElementById('etf-diffValue').textContent = formatWan(Math.abs(diff));
+    document.getElementById('etf-diffNote').textContent = (diff>=0 ? '0050 領先 0056' : '0056 領先 0050')+'（'+modeLabel+'）';
+    document.getElementById('etf-cmp50').textContent = formatWan(final50);
+    document.getElementById('etf-cmp56').textContent = formatWan(final56);
+    document.getElementById('etf-cmpChartSub').textContent = '0050本金 '+formatWan(principal50)+'／0056本金 '+formatWan(principal56)+'，共 '+years+' 年（'+modeLabel+'）';
+    const maxV = Math.max(final50, final56)||1;
+    chartCmp.setData([{data:series50,color:'#2F6FB6',width:3,label:'0050'},{data:series56,color:'#F0B429',width:3,label:'0056'}], years, maxV);
+  }
+
+  [p50,p56].forEach(el=>{
+    el.addEventListener('input',(e)=>{ const raw=parseAmount(e.target.value); e.target.value=raw?raw.toLocaleString('zh-Hant'):''; update(); });
+    el.addEventListener('blur',(e)=>{ e.target.value=parseAmount(e.target.value).toLocaleString('zh-Hant'); });
+  });
+  [r50,y50,r56,y56,yearsInput].forEach(el=> el.addEventListener('input', update));
+  reinvestCheck.addEventListener('change', update);
+
+  window.__updateEtf = update;
+  update();
+})();
+
+// ================= 切換按鈕（單選：按下新的就關掉舊的）=================
+function activateTool(tool){
+  document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel-section').forEach(s=>s.classList.remove('show'));
+  const btn = document.querySelector('.toggle-btn[data-tool="'+tool+'"]');
+  const section = document.getElementById('section-'+tool);
+  if(!btn || !section) return;
+  btn.classList.add('active');
+  section.classList.add('show');
+  if(tool==='inflation' && window.__updateInflation) window.__updateInflation();
+  if(tool==='compound' && window.__updateCompound) window.__updateCompound();
+  if(tool==='combo' && window.__updateCombo) window.__updateCombo();
+  if(tool==='etf' && window.__updateEtf) window.__updateEtf();
+}
+document.querySelectorAll('.toggle-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> activateTool(btn.dataset.tool));
+});
+const hashTool = window.location.hash.replace('#','');
+if(['inflation','compound','combo','etf'].includes(hashTool)){
+  activateTool(hashTool);
+}
+</script>
+</body>
+</html>
