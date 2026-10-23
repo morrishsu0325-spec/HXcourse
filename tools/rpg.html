@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>許仙秘笈．股市闖關</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#F2E8CE;
+    --parchment-dark:#E4D6AC;
+    --path:#B9A46B;
+    --ink:#2E3440;
+    --ink-soft:#5B5646;
+    --red:#E8543E;
+    --red-dark:#C43F2C;
+    --teal:#2FB6A6;
+    --teal-dark:#1F8F82;
+    --gold:#F0B429;
+    --gold-dark:#9A6B0C;
+    --blue:#2F6FB6;
+    --blue-dark:#1D4E8F;
+    --ok:#3FA34D;
+    --fail:#D64545;
+    --panel:#FFFDF6;
+    --wood:#7A5230;
+    --wood-dark:#5B3B21;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;touch-action:manipulation;}
+  button, .btn, .gate, .gatepick, .check-item, .event-overlay, .event-confirm-btn{
+    touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  }
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 20% 15%, #3a2a1a 0%, transparent 45%),
+      radial-gradient(circle at 85% 80%, #2a3a2a 0%, transparent 45%),
+      var(--wood-dark);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Noto Sans TC', sans-serif;
+    padding:24px;
+  }
+  .pixel{font-family:'Press Start 2P', monospace;}
+  .cartridge{
+    width:100%;max-width:980px;
+    background:var(--wood);
+    border-radius:22px;
+    padding:14px;
+    box-shadow:0 30px 60px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.08);
+  }
+  .screen{
+    background:var(--parchment);
+    border-radius:12px;
+    border:4px solid var(--wood-dark);
+    min-height:660px;
+    position:relative;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 22px;
+    background:var(--ink);
+    color:#fff;
+  }
+  .brand{font-size:11px;letter-spacing:1px;opacity:0.75;}
+  .stagebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .dot{width:11px;height:11px;border-radius:50%;background:#5B5646;border:2px solid #444;}
+  .dot.active{background:var(--gold);border-color:var(--gold-dark);}
+  .dot.done{background:var(--ok);border-color:#2a7a34;}
+  .dotlabel{font-size:9px;color:#ddd;}
+
+  .stage-viewport{
+    position:relative;overflow:hidden;flex:none;width:100%;
+  }
+  .stage{
+    position:absolute;top:0;left:0;width:900px;height:420px;transform-origin:top left;
+    background:
+      radial-gradient(ellipse at 10% 0%, #EAF6F1 0%, transparent 55%),
+      radial-gradient(ellipse at 95% 100%, #FEF6E0 0%, transparent 55%),
+      var(--parchment);
+  }
+  .ground{position:absolute;left:0;right:0;bottom:0;height:110px;background:#D9EDD9;border-top:3px dashed #A9C9A9;}
+  .cloud{position:absolute;background:#fff;border-radius:50px;opacity:0.9;}
+
+  .village{position:absolute;left:5%;bottom:110px;text-align:center;}
+  .hutwrap{position:relative;width:120px;height:130px;margin:0 auto;}
+  .roof{position:absolute;top:0;left:0;width:0;height:0;border-left:60px solid transparent;border-right:60px solid transparent;border-bottom:64px solid var(--red);}
+  .body{position:absolute;top:60px;left:14px;width:92px;height:70px;background:#FFF3DD;border:3px solid var(--gold);}
+  .door{position:absolute;top:92px;left:44px;width:26px;height:38px;background:var(--gold-dark);}
+  .flagpole{position:absolute;top:-18px;left:58px;width:3px;height:24px;background:var(--wood-dark);}
+  .flag{position:absolute;top:-18px;left:61px;width:20px;height:14px;background:var(--gold);clip-path:polygon(0 0,100% 20%,0 100%);}
+  .sign{margin-top:8px;background:var(--ink);color:#fff;display:inline-block;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;}
+  .tree{position:absolute;bottom:110px;width:34px;height:34px;border-radius:50%;background:var(--teal);}
+  .trunk{position:absolute;bottom:100px;width:8px;height:22px;background:#8B5E34;}
+
+  /* 師傅 mentors */
+  .mentor{position:absolute;bottom:112px;width:30px;text-align:center;z-index:3;}
+  .mentor .mhead{width:16px;height:16px;border-radius:50%;background:#F4C89A;margin:0 auto;position:relative;z-index:2;}
+  .mentor .mrobe{width:26px;height:30px;border-radius:6px 6px 3px 3px;margin:-3px auto 0;}
+  .mentor .mhat{width:22px;height:8px;border-radius:3px;margin:0 auto -2px;position:relative;z-index:3;}
+  .mentor .mlabel{font-size:8.5px;color:var(--ink-soft);font-weight:700;margin-top:2px;white-space:nowrap;}
+
+  /* 練功木樁 */
+  .dummy{position:absolute;bottom:112px;width:26px;text-align:center;z-index:2;}
+  .dummy .dtop{width:22px;height:22px;border-radius:50%;background:#C9B08A;border:2px solid #8B5E34;margin:0 auto;}
+  .dummy .dpost{width:8px;height:34px;background:#8B5E34;margin:0 auto;}
+  .dummy .dface{font-size:11px;margin-top:-19px;}
+  .spark{position:absolute;font-size:20px;pointer-events:none;animation:sparkpop .5s ease-out forwards;z-index:8;}
+  @keyframes sparkpop{0%{opacity:1;transform:scale(0.4) rotate(0deg);}60%{opacity:1;transform:scale(1.2) rotate(15deg);}100%{opacity:0;transform:scale(0.9) rotate(-10deg) translateY(-16px);}}
+
+  .questpath{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;}
+
+  .hero{position:absolute;width:34px;height:34px;transition:left 1.1s cubic-bezier(.4,0,.2,1), top 1.1s cubic-bezier(.4,0,.2,1), bottom 1.1s cubic-bezier(.4,0,.2,1);z-index:5;text-align:center;}
+  .hero .head{width:18px;height:18px;border-radius:50%;background:#FFD9B3;margin:0 auto;position:relative;z-index:2;}
+  .hero .torso{width:26px;height:20px;border-radius:8px;background:var(--blue);margin:-4px auto 0;position:relative;z-index:1;}
+  .hero .hat{width:16px;height:16px;margin:0 auto -6px;position:relative;z-index:3;font-size:13px;line-height:16px;}
+  .hero .cape{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:20px;height:26px;
+    clip-path:polygon(20% 0,80% 0,100% 100%,50% 85%,0 100%);z-index:0;}
+  .hero .prop{position:absolute;top:14px;right:-9px;font-size:13px;z-index:4;transform:rotate(18deg);}
+  .hero.bump{animation:bump .35s ease;}
+  @keyframes bump{0%{transform:translateY(0);}30%{transform:translateY(-10px);}100%{transform:translateY(0);}}
+
+  .gate{position:absolute;text-align:center;cursor:pointer;transition:transform .2s;}
+  .gate:hover{transform:translateY(-4px);}
+  .gate.locked{cursor:not-allowed;opacity:0.55;}
+  .gate .towers{display:flex;justify-content:center;gap:2px;}
+  .tower{width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;}
+  .keep{width:80px;height:60px;background:#FFFDF6;border:3px solid;margin:0 auto;}
+  .gatelabel{margin-top:6px;color:#fff;font-weight:700;font-size:13px;padding:6px 10px;border-radius:8px;display:inline-block;}
+  .stamp{position:absolute;top:-14px;right:-10px;background:var(--ok);color:#fff;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;border:3px solid #fff;transform:rotate(12deg);box-shadow:0 2px 6px rgba(0,0,0,0.3);}
+  .lockicon{position:absolute;top:-10px;right:-8px;background:var(--ink);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;border:3px solid #fff;}
+
+  /* 創新板：小型科技關卡 */
+  .gate-tech .keep{width:56px;height:44px;border-radius:4px;position:relative;background:repeating-linear-gradient(45deg,#FFFDF6,#FFFDF6 6px,#FBEAC0 6px,#FBEAC0 8px);}
+  .gate-tech .antenna{width:2px;height:16px;background:var(--gold-dark);margin:0 auto;}
+  .gate-tech .antenna::after{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--gold);}
+
+  /* 上市：最華麗大型城堡 */
+  .gate-grand{transform:scale(1.14);transform-origin:bottom center;filter:drop-shadow(0 0 14px rgba(240,180,41,0.35));}
+  .gate-grand .towers{gap:1px;}
+  .gate-grand .keep{width:104px;height:74px;border-width:4px;position:relative;background:linear-gradient(180deg,#FFFDF6,#F3ECD8);}
+  .gate-grand .banner{position:absolute;top:-24px;left:50%;transform:translateX(-50%);width:14px;height:26px;background:var(--gold);clip-path:polygon(0 0,100% 0,100% 70%,50% 100%,0 70%);}
+  .gate-grand .glow{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(240,180,41,0.35) 0%, transparent 70%);z-index:-1;}
+  .gate-grand .crown{position:absolute;top:-40px;left:50%;transform:translateX(-50%);font-size:18px;animation:crownfloat 2.2s ease-in-out infinite;}
+  @keyframes crownfloat{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-5px);}}
+  .gate-tech .antenna{position:relative;}
+  .gate-tech .chip{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:15px;animation:chippulse 1.6s ease-in-out infinite;}
+  @keyframes chippulse{0%,100%{opacity:0.6;transform:translateX(-50%) scale(0.9);}50%{opacity:1;transform:translateX(-50%) scale(1.15);}}
+
+  .hint{position:absolute;left:0;right:0;bottom:14px;text-align:center;font-size:12.5px;color:var(--ink-soft);font-weight:500;padding:0 16px;}
+
+  .floatnum{position:absolute;font-weight:900;font-size:13px;pointer-events:none;animation:floatup 1s ease-out forwards;z-index:9;}
+  @keyframes floatup{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-38px);}}
+
+  .toast{
+    position:absolute;left:50%;top:14px;transform:translateX(-50%) translateY(-20px);
+    background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;
+    font-size:12.5px;font-weight:700;box-shadow:0 6px 16px rgba(0,0,0,.3);
+    opacity:0;transition:opacity .25s, transform .25s;z-index:20;white-space:nowrap;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast.fail{background:var(--fail);}
+  .toast.ok{background:var(--ok);}
+
+  /* 事件彈窗（置中、明顯） */
+  .event-overlay{
+    position:absolute;inset:0;background:rgba(0,0,0,0.35);
+    display:flex;align-items:flex-end;justify-content:center;padding-bottom:200px;
+    opacity:0;pointer-events:none;transition:opacity .2s;z-index:30;border-radius:0 0 8px 8px;
+  }
+  .event-overlay.show{opacity:1;pointer-events:auto;}
+  .event-card{
+    background:#fff;border-radius:16px;padding:22px 26px;max-width:380px;width:88%;
+    text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.35);
+    border:4px solid var(--fail);
+    transform:scale(0.85);transition:transform .25s;
+  }
+  .event-overlay.show .event-card{transform:scale(1);animation:eventshake .4s ease;}
+  .event-card.boom{border-color:var(--ok);}
+  @keyframes eventshake{0%,100%{transform:scale(1) translateX(0);}20%{transform:scale(1) translateX(-6px);}40%{transform:scale(1) translateX(6px);}60%{transform:scale(1) translateX(-4px);}80%{transform:scale(1) translateX(4px);}}
+  .event-card .eicon{font-size:38px;margin-bottom:6px;}
+  .event-card .etitle{font-size:14px;font-weight:900;color:var(--fail);margin-bottom:6px;}
+  .event-card.boom .etitle{color:var(--ok);}
+  .event-card .emsg{font-size:13px;color:var(--ink);line-height:1.6;margin-bottom:10px;}
+  .event-card .edelta{font-size:12.5px;font-weight:800;padding:6px 10px;border-radius:8px;background:#FBE9E7;color:var(--fail);display:inline-block;}
+  .event-card.boom .edelta{background:#E6F6E9;color:var(--ok);}
+
+  /* 破產危機：最嚴重層級，黑底、需手動確認才能關閉 */
+  .event-card.crisis{background:#241417;border-color:#8a0000;}
+  .event-card.crisis .etitle{color:#FF6B5E;font-size:17px;}
+  .event-card.crisis .emsg{color:#F5D9D5;}
+  .event-card.crisis .eicon{font-size:46px;animation:crisisshake 0.6s ease infinite;}
+  @keyframes crisisshake{0%,100%{transform:rotate(0);}25%{transform:rotate(-4deg);}75%{transform:rotate(4deg);}}
+  .event-confirm-btn{
+    margin-top:12px;background:#8a0000;color:#fff;border:none;border-radius:9px;
+    padding:11px 22px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+    display:none;
+  }
+  .event-confirm-btn:hover{filter:brightness(1.15);}
+
+  .statcard.flash-bust{animation:cardshake .5s ease;box-shadow:0 0 0 3px var(--fail) inset;}
+  .statcard.flash-boom{animation:cardglow .6s ease;box-shadow:0 0 0 3px var(--ok) inset;}
+  @keyframes cardshake{0%,100%{transform:translateX(0);}20%{transform:translateX(-4px);}40%{transform:translateX(4px);}60%{transform:translateX(-3px);}80%{transform:translateX(3px);}}
+  @keyframes cardglow{0%{transform:scale(1);}50%{transform:scale(1.04);}100%{transform:scale(1);}}
+
+  .panel{background:var(--panel);border-top:4px solid var(--wood-dark);padding:16px 24px 20px;display:none;position:relative;}
+  .panel.show{display:block;}
+  h2.title{margin:0 0 4px;font-size:19px;color:var(--ink);}
+  p.desc{margin:0 0 12px;font-size:12.5px;color:var(--ink-soft);line-height:1.6;}
+
+  .checklist{display:grid;gap:8px;margin-bottom:12px;}
+  .check-item{display:flex;align-items:center;gap:10px;background:#F5F1E4;border-radius:8px;padding:9px 12px;font-size:12.5px;color:var(--ink);cursor:pointer;}
+  .check-item .box{width:18px;height:18px;border-radius:5px;border:2px solid var(--path);flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;}
+  .check-item.on .box{background:var(--ok);border-color:var(--ok);}
+
+  .industry-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;background:#F5F1E4;border-radius:10px;padding:10px 14px;}
+  .industry-chip{background:var(--gold);color:var(--ink);font-weight:900;font-size:13px;padding:6px 14px;border-radius:20px;}
+  .industry-tag{font-size:10.5px;padding:2px 8px;border-radius:10px;background:#ddd;color:var(--ink-soft);font-weight:700;}
+  .industry-tag.special{background:#E6F6E9;color:var(--ok);}
+
+  .statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px;position:relative;}
+  .statcard{background:#F5F1E4;border-radius:10px;padding:12px 14px;border:2px solid #E4D6AC;}
+  .statcard .sname{font-size:12px;color:var(--ink-soft);font-weight:700;margin-bottom:4px;}
+  .statcard .sval{font-size:22px;font-weight:900;color:var(--ink);}
+  .statcard .sbar-bg{background:#E4D6AC;border-radius:8px;height:10px;margin-top:8px;overflow:hidden;}
+  .statcard .sbar-fill{height:100%;border-radius:8px;transition:width .3s;}
+  .statcard .sreq{font-size:10.5px;color:var(--ink-soft);margin-top:6px;line-height:1.5;}
+  .statcard .sreq b{color:var(--ok);}
+  .statcard .sreq b.short{color:var(--fail);}
+
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{font-family:'Noto Sans TC',sans-serif;font-weight:700;font-size:13.5px;border:none;border-radius:9px;padding:11px 20px;cursor:pointer;color:#fff;background:var(--ink);transition:transform .1s, filter .12s;user-select:none;}
+  .btn:hover{filter:brightness(1.08);}
+  .btn:active{transform:scale(0.95);}
+  .btn.primary{background:var(--red);}
+  .btn.gold{background:var(--gold);color:var(--ink);}
+  .btn.teal{background:var(--teal);}
+  .btn.blue{background:var(--blue);}
+  .btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .btn.ghost{background:transparent;color:var(--ink-soft);border:2px solid var(--path);}
+  .btn.big{padding:16px 30px;font-size:15px;}
+
+  .gatepicks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .gatepick{background:#F5F1E4;border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:3px solid transparent;transition:transform .15s, border-color .15s;}
+  .gatepick:hover{transform:translateY(-3px);}
+  .gatepick.gold{border-color:var(--gold);} .gatepick.teal{border-color:var(--teal);} .gatepick.blue{border-color:var(--blue);}
+  .gatepick.locked{opacity:0.5;cursor:not-allowed;}
+  .gatepick.locked:hover{transform:none;}
+  .gatepick .gpname{font-weight:900;font-size:15px;margin:6px 0 3px;}
+  .gatepick .gpsub{font-size:11px;color:var(--ink-soft);}
+
+  .compare{display:grid;gap:10px;margin-bottom:14px;}
+  .cmp-row{display:grid;grid-template-columns:130px 1fr 110px 26px;align-items:center;gap:10px;}
+  .cmp-row label{font-size:12px;font-weight:700;color:var(--ink);}
+  .cmp-bar-bg{background:#E4D6AC;border-radius:8px;height:12px;overflow:hidden;position:relative;}
+  .cmp-bar-fill{height:100%;border-radius:8px;transition:width .3s;}
+  .cmp-bar-need{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);}
+  .cmp-row .val{font-size:11px;color:var(--ink-soft);text-align:right;}
+  .cmp-row .mark{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;background:#C9BFA0;flex:none;}
+  .cmp-row .mark.ok{background:var(--ok);}
+
+  .resultbox{border-radius:10px;padding:14px 16px;margin-bottom:14px;font-size:13px;line-height:1.7;}
+  .resultbox.ok{background:#E6F6E9;color:#2a7a34;border:2px solid #3FA34D;}
+  .resultbox.fail{background:#FBE9E7;color:var(--red-dark);border:2px solid var(--red);}
+
+  .badgeshelf{display:flex;gap:10px;margin-top:6px;}
+  .badge{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.25);opacity:0.25;}
+  .badge.earned{opacity:1;}
+
+  @media (max-width:720px){
+    .screen{min-height:auto;}
+    .gatepicks{grid-template-columns:1fr;}
+    .statgrid{grid-template-columns:1fr;}
+    .cmp-row{grid-template-columns:96px 1fr 84px 22px;}
+  }
+</style>
+</head>
+<body>
+<div class="cartridge">
+  <div class="screen">
+    <div class="topbar">
+      <div class="brand pixel">許仙秘笈．股市闖關</div>
+      <div class="stagebar" id="stagebar">
+        <div class="dot" data-s="0"></div><span class="dotlabel">新手村</span>
+        <div class="dot" data-s="1"></div><span class="dotlabel">選路線</span>
+        <div class="dot" data-s="2"></div><span class="dotlabel">挑戰</span>
+        <div class="dot" data-s="3"></div><span class="dotlabel">晉級</span>
+      </div>
+    </div>
+
+    <div class="stage-viewport" id="stage-viewport">
+    <div class="stage" id="stage">
+      <div class="toast" id="toast"></div>
+      <div class="cloud" style="width:70px;height:34px;top:26px;left:8%;"></div>
+      <div class="cloud" style="width:50px;height:26px;top:50px;left:14%;"></div>
+      <div class="cloud" style="width:60px;height:30px;top:20px;left:80%;"></div>
+      <div class="ground"></div>
+
+      <div class="village">
+        <div class="hutwrap">
+          <div class="flagpole"></div><div class="flag"></div>
+          <div class="roof"></div>
+          <div class="body"></div>
+          <div class="door"></div>
+        </div>
+        <div class="sign" id="village-sign">新手村（興櫃）</div>
+      </div>
+      <div class="tree" style="left:2%;bottom:150px;"></div><div class="trunk" style="left:3.6%;bottom:118px;"></div>
+      <div class="tree" style="left:19%;bottom:150px;"></div><div class="trunk" style="left:20.6%;bottom:118px;"></div>
+
+      <div class="mentor" style="left:1%;">
+        <div class="mhat" style="background:var(--red);"></div>
+        <div class="mhead"></div>
+        <div class="mrobe" style="background:var(--red-dark);"></div>
+        <div class="mlabel">主辦師傅</div>
+      </div>
+      <div class="mentor" style="left:22.5%;">
+        <div class="mhat" style="background:var(--teal);"></div>
+        <div class="mhead"></div>
+        <div class="mrobe" style="background:var(--teal-dark);"></div>
+        <div class="mlabel">協辦師傅</div>
+      </div>
+
+      <div class="dummy" id="dummy" style="left:12%;">
+        <div class="dface">💥</div>
+        <div class="dtop"></div>
+        <div class="dpost"></div>
+      </div>
+
+      <div class="hero" id="hero" style="left:16%;bottom:112px;top:auto;">
+        <div class="hat" id="hero-hat" style="display:none;"></div>
+        <div class="cape" id="hero-cape"></div>
+        <div class="head"></div><div class="torso" id="hero-torso"></div>
+        <div class="prop" id="hero-prop"></div>
+      </div>
+
+      <div class="gate gate-tech" id="gate-gold" style="left:44%;top:46%;" data-gate="gold">
+        <div class="chip">🔷</div>
+        <div class="antenna"></div>
+        <div class="towers">
+          <div class="tower" style="border-bottom:18px solid var(--gold-dark);"></div>
+          <div class="tower" style="border-bottom:22px solid var(--gold-dark);"></div>
+        </div>
+        <div class="keep" style="border-color:var(--gold);"></div>
+        <div class="gatelabel" style="background:var(--gold);color:var(--ink);">創新板</div>
+      </div>
+
+      <div class="gate" id="gate-teal" style="left:64%;top:32%;" data-gate="teal">
+        <div class="towers">
+          <div class="tower" style="border-bottom:26px solid var(--teal-dark);"></div>
+          <div class="tower" style="border-bottom:32px solid var(--teal-dark);"></div>
+          <div class="tower" style="border-bottom:26px solid var(--teal-dark);"></div>
+        </div>
+        <div class="keep" style="border-color:var(--teal);"></div>
+        <div class="gatelabel" style="background:var(--teal);">上櫃</div>
+      </div>
+
+      <div class="gate gate-grand" id="gate-blue" style="left:78%;top:16%;" data-gate="blue">
+        <div class="glow"></div>
+        <div class="crown">👑</div>
+        <div class="banner"></div>
+        <div class="towers">
+          <div class="tower" style="border-bottom:30px solid var(--blue-dark);"></div>
+          <div class="tower" style="border-bottom:38px solid var(--blue-dark);"></div>
+          <div class="tower" style="border-bottom:46px solid var(--gold-dark);"></div>
+          <div class="tower" style="border-bottom:38px solid var(--blue-dark);"></div>
+          <div class="tower" style="border-bottom:30px solid var(--blue-dark);"></div>
+        </div>
+        <div class="keep" style="border-color:var(--blue);"></div>
+        <div class="gatelabel" style="background:var(--blue);">上市<br><span style="font-size:9px;opacity:0.85;">最終關卡</span></div>
+      </div>
+
+      <div class="hint" id="hint">歡迎來到興櫃新手村——這裡是所有企業闖蕩資本市場的起點</div>
+    </div>
+    </div>
+
+    <!-- ===== Panel 0: 新手村（點擊練功）===== -->
+    <div class="panel show" id="panel-0">
+      <h2 class="title" id="panel0-title">新手村（興櫃）：點擊練功，累積素質</h2>
+      <p class="desc" id="panel0-desc">入場資格用來確認你符合興櫃基本條件（點一下打勾即可）；下方直接開始點擊練功——每點一下「練功」，四項素質都會隨機提升。</p>
+
+      <div class="checklist" id="checklist0">
+        <div class="check-item" data-i="0"><div class="box"></div>財務門檻：無門檻，人人都能報名</div>
+        <div class="check-item" data-i="1"><div class="box"></div>基本裝備：財報查核簽證、內控內稽制度、資訊公開透明</div>
+        <div class="check-item" data-i="2"><div class="box"></div>拜師：至少 2 位師傅願意收你（1 主辦、1 協辦以上推薦券商）</div>
+      </div>
+
+      <div class="industry-wrap">
+        <span style="font-size:12px;font-weight:700;color:var(--ink-soft);">產業類別：</span>
+        <span class="industry-chip" id="industry-chip">—</span>
+        <span class="industry-tag" id="industry-tag">—</span>
+        <button class="btn ghost" id="btn-reroll" style="padding:7px 14px;font-size:12px;">🎲 重新抽產業</button>
+      </div>
+
+      <div class="statgrid" id="statgrid">
+        <div class="statcard" id="statcard-age"><div class="sname">年齡（設立年限）</div><div class="sval" id="sv-age">0.0 年</div><div class="sbar-bg"><div class="sbar-fill" id="sb-age" style="background:var(--red);width:0%;"></div></div><div class="sreq" id="sr-age"></div></div>
+        <div class="statcard" id="statcard-hp"><div class="sname">體力值（資本額）</div><div class="sval" id="sv-hp">0 萬</div><div class="sbar-bg"><div class="sbar-fill" id="sb-hp" style="background:var(--teal);width:0%;"></div></div><div class="sreq" id="sr-hp"></div></div>
+        <div class="statcard" id="statcard-atk"><div class="sname">攻擊力（獲利能力）</div><div class="sval" id="sv-atk">0.0 %</div><div class="sbar-bg"><div class="sbar-fill" id="sb-atk" style="background:var(--gold-dark);width:0%;"></div></div><div class="sreq" id="sr-atk"></div></div>
+        <div class="statcard" id="statcard-minion"><div class="sname">小弟（股東人數）</div><div class="sval" id="sv-minion">0 人</div><div class="sbar-bg"><div class="sbar-fill" id="sb-minion" style="background:var(--blue);width:0%;"></div></div><div class="sreq" id="sr-minion"></div></div>
+      </div>
+
+      <div class="btnrow" style="align-items:center;">
+        <button class="btn primary big" id="btn-practice">⚔️ 練功！（點我）</button>
+        <span id="clickcount" style="font-size:12px;color:var(--ink-soft);font-weight:700;">已練功 0 次</span>
+        <button class="btn gold" id="btn-to-choose" style="margin-left:auto;">前往挑戰晉級 →</button>
+      </div>
+
+      <div class="event-overlay" id="event-overlay">
+        <div class="event-card" id="event-card">
+          <div class="eicon" id="event-icon">⚠️</div>
+          <div class="etitle" id="event-title">事件發生！</div>
+          <div class="emsg" id="event-msg"></div>
+          <div class="edelta" id="event-delta"></div>
+          <button class="event-confirm-btn" id="event-confirm-btn">💥 重新開始練功</button>
+          <div style="font-size:10px;color:var(--ink-soft);margin-top:8px;" id="event-hint">點一下關閉，看看數值變化</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Panel 1: 選路線 ===== -->
+    <div class="panel" id="panel-1">
+      <h2 class="title">選一條路線挑戰晉級</h2>
+      <p class="desc" id="panel1-desc">三條路線都可以直接挑戰——不過一旦踏上「上櫃」這條路，創新板就不會再出現囉（上櫃過關後會直接銜接挑戰上市）。</p>
+      <div class="gatepicks" id="gatepicks">
+        <div class="gatepick gold" data-pick="gold">
+          <div class="gpname" style="color:var(--gold-dark);">創新板</div>
+          <div class="gpsub" id="gp-gold-sub">限定特殊職業・獨立終點路線</div>
+        </div>
+        <div class="gatepick teal" data-pick="teal">
+          <div class="gpname" style="color:var(--teal-dark);">上櫃</div>
+          <div class="gpsub">不限職業・過關後直接銜接上市</div>
+        </div>
+        <div class="gatepick blue" data-pick="blue">
+          <div class="gpname" style="color:var(--blue-dark);">上市</div>
+          <div class="gpsub">不限職業・門檻最高，可直接挑戰</div>
+        </div>
+      </div>
+      <div class="btnrow" style="margin-top:14px;">
+        <button class="btn ghost" id="btn-back-village">← 回新手村繼續練功</button>
+      </div>
+    </div>
+
+    <!-- ===== Panel 2: 挑戰 ===== -->
+    <div class="panel" id="panel-2">
+      <h2 class="title" id="challenge-title">挑戰：上櫃</h2>
+      <p class="desc" id="challenge-desc">這是你目前的素質，跟城門守衛要求的門檻比比看。</p>
+      <div class="compare" id="compare"></div>
+      <div id="resultarea"></div>
+      <div class="btnrow">
+        <button class="btn primary" id="btn-challenge">挑戰城門守衛！</button>
+        <button class="btn ghost" id="btn-back-choose">← 換一條路線</button>
+      </div>
+    </div>
+
+    <!-- ===== Panel 3: 結算 ===== -->
+    <div class="panel" id="panel-3">
+      <h2 class="title">闖關紀錄</h2>
+      <p class="desc">恭喜晉級成功！你可以再挑戰別條路線，收集全部三面旗幟。</p>
+      <div class="badgeshelf" id="badgeshelf">
+        <div class="badge" id="badge-gold" style="background:var(--gold-dark);">創新板</div>
+        <div class="badge" id="badge-teal" style="background:var(--teal-dark);">上櫃</div>
+        <div class="badge" id="badge-blue" style="background:var(--blue-dark);">上市</div>
+      </div>
+      <div class="btnrow" style="margin-top:16px;">
+        <button class="btn gold" id="btn-again">再挑戰其他路線</button>
+        <button class="btn ghost" id="btn-restart">重新開始（回到新手村）</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GATES = {
+  gold: {
+    name:'創新板', color:'#F0B429', dark:'#9A6B0C',
+    special:true, terminal:true,
+    intro:'創新板限定擁有關鍵技術的特殊職業（AI晶片、生技新藥、雲端軟體、綠能），不硬性要求資本額與獲利，改看年齡與股東人數。這是一條獨立的終點路線。',
+    stats:[
+      {key:'age', label:'年齡（設立年限）', unit:'年', need:2, max:5},
+      {key:'minion', label:'小弟（股東人數）', unit:'人', need:50, max:100},
+    ]
+  },
+  teal: {
+    name:'上櫃', color:'#2FB6A6', dark:'#1F8F82',
+    special:false, next:'blue',
+    intro:'上櫃不限職業，年限、資本額、獲利能力、股東人數都要達標。過了上櫃，會直接銜接挑戰最終關卡：上市！',
+    stats:[
+      {key:'age', label:'年齡（設立年限）', unit:'年', need:2, max:5},
+      {key:'hp', label:'體力值（資本額）', unit:'萬', need:5000, max:10000},
+      {key:'atk', label:'攻擊力（獲利能力）', unit:'%', need:4, max:10},
+      {key:'minion', label:'小弟（股東人數）', unit:'人', need:300, max:600},
+    ]
+  },
+  blue: {
+    name:'上市', color:'#2F6FB6', dark:'#1D4E8F',
+    special:false, terminal:true, finalBoss:true,
+    intro:'最終關卡！不限職業，但年限、資本額、獲利能力、股東人數的要求是三條路線中最嚴格的——只有攻略過上櫃的挑戰者才能站上這裡。',
+    stats:[
+      {key:'age', label:'年齡（設立年限）', unit:'年', need:3, max:6},
+      {key:'hp', label:'體力值（資本額）', unit:'萬', need:60000, max:100000},
+      {key:'atk', label:'攻擊力（獲利能力）', unit:'%', need:6, max:12},
+      {key:'minion', label:'小弟（股東人數）', unit:'人', need:1000, max:2000},
+    ]
+  }
+};
+
+const INDUSTRIES = [
+  {name:'AI晶片', special:true, color:'#2F6FB6', cape:'#1D4E8F', icon:'🤖', prop:'📡', role:'機甲工程師'},
+  {name:'生技新藥', special:true, color:'#3FA34D', cape:'#2a7a34', icon:'🧪', prop:'💉', role:'煉藥術士'},
+  {name:'雲端軟體', special:true, color:'#4AB8E8', cape:'#2E8FBF', icon:'☁️', prop:'💻', role:'雲端法師'},
+  {name:'綠能', special:true, color:'#2FB6A6', cape:'#1F8F82', icon:'🌱', prop:'🔋', role:'綠能守護者'},
+  {name:'傳統製造', special:false, color:'#8B7355', cape:'#6B5940', icon:'⛑️', prop:'🔧', role:'重工鐵匠'},
+  {name:'連鎖餐飲', special:false, color:'#E8543E', cape:'#C43F2C', icon:'🧑‍🍳', prop:'🍜', role:'料理職人'},
+  {name:'一般消費', special:false, color:'#9B6FC9', cape:'#7A50A8', icon:'🎩', prop:'🛍️', role:'商賈行商'},
+  {name:'金融服務', special:false, color:'#1D4E8F', cape:'#12325C', icon:'🎓', prop:'💰', role:'金融謀士'},
+];
+
+// 每個產業的素質成長曲線：
+// hp（體力值/資本額）改用複利式百分比成長：每次 = 目前資本額 × 隨機% + 基礎值，越滾越快，不用點到天荒地老
+// age/atk/minion 維持固定隨機範圍；events=機率觸發的特殊事件（可正可負，回撤數值）
+// 每個產業的素質成長曲線：
+// hp（體力值/資本額）基礎成長用複利式百分比：每次 = 目前資本額 × 隨機% + 基礎值
+// 事件對 hp 的影響也改用「目前資本額的百分比」（hpPct），這樣不管資本額滾多大都still有感
+// age/atk/minion 維持固定隨機範圍；events=機率觸發的特殊事件（可正可負，回撤數值）
+const GROWTH_PROFILE = {
+  'AI晶片': {
+    base:{age:[0.1,0.3], hp:{pct:[0.08,0.16], flat:[80,300]}, atk:[0.2,0.8], minion:[10,40]},
+    crisis:{p:0.025, msg:'遭國際大廠控告專利侵權，鉅額賠款拖垮資產負債表，公司宣告破產清算！'},
+    events:[
+      {p:0.16, kind:'boom', msg:'🚀 訂單大爆發！體力值與攻擊力大幅跳升', effect:{hpPct:0.5, atk:1.5}},
+      {p:0.065, kind:'bust', msg:'⚠️ 先進製程卡良率關卡，體力值大幅倒退', effect:{hpPct:-0.3}},
+    ]
+  },
+  '生技新藥': {
+    base:{age:[0.1,0.3], hp:{pct:[0.03,0.08], flat:[40,150]}, atk:[0.05,0.25], minion:[5,25]},
+    crisis:{p:0.04, msg:'關鍵新藥臨床三期全面失敗，燒光所有資金，公司宣告破產！'},
+    events:[
+      {p:0.10, kind:'boom', msg:'🎉 新藥臨床三期過關！攻擊力大暴衝', effect:{atk:3.5}},
+      {p:0.14, kind:'bust', msg:'💊 臨床試驗結果失敗，攻擊力大幅倒退', effect:{atk:-0.5}},
+    ]
+  },
+  '雲端軟體': {
+    base:{age:[0.1,0.3], hp:{pct:[0.07,0.14], flat:[60,250]}, atk:[0.2,0.6], minion:[15,45]},
+    crisis:{p:0.02, msg:'爆發重大資安事故，用戶個資外洩引發集體求償，公司不堪負荷宣告破產！'},
+    events:[
+      {p:0.18, kind:'boom', msg:'☁️ 訂閱用戶暴增！小弟人數跳升', effect:{minion:80}},
+      {p:0.095, kind:'bust', msg:'🔓 資安漏洞爆發，用戶信心崩潰，小弟大量流失', effect:{minion:-80}},
+    ]
+  },
+  '綠能': {
+    base:{age:[0.1,0.3], hp:{pct:[0.06,0.13], flat:[60,280]}, atk:[0.15,0.5], minion:[8,30]},
+    crisis:{p:0.025, msg:'電廠工程爆出重大弊案，鉅額罰款與求償接踵而至，公司清算收場！'},
+    events:[
+      {p:0.12, kind:'boom', msg:'🌞 綠電大單簽約，體力值大幅跳升', effect:{hpPct:0.5}},
+      {p:0.09, kind:'bust', msg:'📉 政府補助大砍，體力值大幅倒退', effect:{hpPct:-0.35}},
+    ]
+  },
+  '傳統製造': {
+    base:{age:[0.1,0.3], hp:{pct:[0.04,0.09], flat:[40,180]}, atk:[0.1,0.4], minion:[8,28]},
+    crisis:{p:0.025, msg:'工廠發生重大公安意外，鉅額賠償與長期停工，公司宣告破產！'},
+    events:[
+      {p:0.14, kind:'boom', msg:'📦 拿下海外大單，體力值大幅跳升', effect:{hpPct:0.4}},
+      {p:0.11, kind:'bust', msg:'🏭 原物料成本飆漲，攻擊力被大幅侵蝕', effect:{atk:-0.6}},
+    ]
+  },
+  '連鎖餐飲': {
+    base:{age:[0.1,0.3], hp:{pct:[0.02,0.06], flat:[25,100]}, atk:[0.05,0.3], minion:[10,35]},
+    crisis:{p:0.03, msg:'食安風暴全面延燒，品牌信譽崩盤，各分店接連倒閉！'},
+    events:[
+      {p:0.14, kind:'bust', msg:'🍜 食安風波衝擊，攻擊力嚴重下滑', effect:{atk:-1.0}},
+      {p:0.11, kind:'bust', msg:'📈 原物料大漲侵蝕獲利，攻擊力大幅倒退', effect:{atk:-0.6}},
+      {p:0.09, kind:'bust', msg:'🪑 來客數大幅下滑，小弟（客戶）流失', effect:{minion:-45}},
+      {p:0.12, kind:'boom', msg:'🎉 新分店開幕大排長龍！小弟人數跳升', effect:{minion:60}},
+    ]
+  },
+  '一般消費': {
+    base:{age:[0.1,0.3], hp:{pct:[0.05,0.10], flat:[45,200]}, atk:[0.15,0.45], minion:[10,32]},
+    crisis:{p:0.025, msg:'爆發重大詐欺醜聞，商譽全毀、遭大量退貨與求償，公司宣告清算！'},
+    events:[
+      {p:0.15, kind:'boom', msg:'🛒 旺季買氣旺盛，小弟人數增加', effect:{minion:50}},
+      {p:0.11, kind:'bust', msg:'🛍️ 景氣循環急轉直下，消費力道重挫', effect:{atk:-0.6, hpPct:-0.3}},
+    ]
+  },
+  '金融服務': {
+    base:{age:[0.1,0.3], hp:{pct:[0.08,0.15], flat:[70,280]}, atk:[0.15,0.5], minion:[8,26]},
+    crisis:{p:0.02, msg:'爆發違約風暴引發擠兌，機構週轉不靈，宣告破產！'},
+    events:[
+      {p:0.15, kind:'boom', msg:'📈 投資收益大進帳！體力值大幅跳升', effect:{hpPct:0.5}},
+      {p:0.09, kind:'bust', msg:'⚠️ 升息推升呆帳風險，攻擊力大幅下滑', effect:{atk:-0.8}},
+    ]
+  },
+};
+
+let stage = 0;
+let checklist0 = [false,false,false];
+let currentGate = null;
+let earned = {gold:false, teal:false, blue:false};
+let currentIndustry = null;
+let clickCount = 0;
+let player = {age:0, hp:0, atk:0, minion:0};
+
+const heroEl = document.getElementById('hero');
+const stageEl = document.getElementById('stage');
+const stageViewportEl = document.getElementById('stage-viewport');
+const hintEl = document.getElementById('hint');
+const toastEl = document.getElementById('toast');
+
+const DESIGN_W = 900, DESIGN_H = 420;
+function fitStage(){
+  const w = stageViewportEl.clientWidth;
+  const scale = w / DESIGN_W;
+  stageEl.style.transform = `scale(${scale})`;
+  stageViewportEl.style.height = (DESIGN_H * scale) + 'px';
+}
+window.addEventListener('resize', fitStage);
+window.addEventListener('orientationchange', fitStage);
+
+function toast(msg, kind){
+  toastEl.textContent = msg;
+  toastEl.className = 'toast show' + (kind ? ' '+kind : '');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>{ toastEl.classList.remove('show'); }, 2200);
+}
+
+const STAT_NAME = {age:'年齡', hp:'體力值（資本額）', atk:'攻擊力（獲利能力）', minion:'小弟（股東人數）'};
+const STAT_UNIT = {age:'年', hp:'萬', atk:'%', minion:'人'};
+
+function showEventModal(ev, onClose){
+  const overlay = document.getElementById('event-overlay');
+  const card = document.getElementById('event-card');
+  const icon = document.getElementById('event-icon');
+  const title = document.getElementById('event-title');
+  const msg = document.getElementById('event-msg');
+  const delta = document.getElementById('event-delta');
+  const confirmBtn = document.getElementById('event-confirm-btn');
+  const hint = document.getElementById('event-hint');
+
+  card.classList.remove('boom','crisis');
+  let resolved = {};
+
+  if(ev.kind === 'crisis'){
+    card.classList.add('crisis');
+    icon.textContent = '💀';
+    title.textContent = '公司倒閉！破產危機！';
+    msg.textContent = ev.msg;
+    delta.textContent = '所有素質歸零，一切從頭來過';
+    confirmBtn.style.display = 'inline-block';
+    hint.style.display = 'none';
+    resolved = {reset:true};
+  }else{
+    card.classList.toggle('boom', ev.kind==='boom');
+    icon.textContent = ev.kind==='boom' ? '🎉' : '⚠️';
+    title.textContent = ev.kind==='boom' ? '好消息！' : '事件發生！';
+    msg.textContent = ev.msg;
+    confirmBtn.style.display = 'none';
+    hint.style.display = 'block';
+
+    // 把 hpPct（資本額百分比）換算成當下的實際數值，顯示給玩家看
+    if(ev.effect.hpPct !== undefined) resolved.hp = Math.round(player.hp * ev.effect.hpPct);
+    if(ev.effect.hp !== undefined) resolved.hp = (resolved.hp||0) + ev.effect.hp;
+    if(ev.effect.atk !== undefined) resolved.atk = ev.effect.atk;
+    if(ev.effect.minion !== undefined) resolved.minion = ev.effect.minion;
+    if(ev.effect.age !== undefined) resolved.age = ev.effect.age;
+
+    const parts = Object.entries(resolved).map(([k,v])=>{
+      const sign = v>=0 ? '+' : '';
+      return `${STAT_NAME[k]} ${sign}${v}${STAT_UNIT[k]}`;
+    });
+    delta.textContent = parts.join('　');
+  }
+
+  overlay.classList.add('show');
+
+  let closed = false;
+  function doClose(){
+    if(closed) return;
+    closed = true;
+    overlay.classList.remove('show');
+    overlay.removeEventListener('click', overlayClickHandler);
+    confirmBtn.removeEventListener('click', doClose);
+    clearTimeout(showEventModal._t);
+    if(onClose) onClose(resolved);
+  }
+  function overlayClickHandler(e){
+    if(e.target === overlay) doClose();
+  }
+
+  if(ev.kind === 'crisis'){
+    // 破產危機：一定要點確認按鈕才能關閉，不能點旁邊、也不會自動消失
+    confirmBtn.addEventListener('click', doClose);
+  }else{
+    overlay.addEventListener('click', overlayClickHandler);
+    showEventModal._t = setTimeout(doClose, 2400);
+  }
+}
+
+function setStageDots(){
+  document.querySelectorAll('.dot').forEach(d=>{
+    const s = parseInt(d.dataset.s);
+    d.classList.remove('active','done');
+    if(s < stage) d.classList.add('done');
+    else if(s === stage) d.classList.add('active');
+  });
+}
+function showPanel(n){
+  for(let i=0;i<4;i++) document.getElementById('panel-'+i).classList.toggle('show', i===n);
+}
+function moveHeroTo(pct_l, bottomPx){
+  heroEl.style.left = pct_l+'%';
+  heroEl.style.bottom = bottomPx;
+  heroEl.style.top = 'auto';
+}
+
+// ---- checklist (flavor only, no longer gates practice) ----
+document.querySelectorAll('#checklist0 .check-item').forEach(item=>{
+  item.addEventListener('click', ()=>{
+    const i = parseInt(item.dataset.i);
+    checklist0[i] = !checklist0[i];
+    item.classList.toggle('on', checklist0[i]);
+    item.querySelector('.box').textContent = checklist0[i] ? '✓' : '';
+  });
+});
+
+// init industry immediately
+rerollIndustry();
+
+function rerollIndustry(){
+  currentIndustry = INDUSTRIES[Math.floor(Math.random()*INDUSTRIES.length)];
+  document.getElementById('industry-chip').textContent = `${currentIndustry.icon} ${currentIndustry.name}（${currentIndustry.role}）`;
+  const tag = document.getElementById('industry-tag');
+  if(currentIndustry.special){
+    tag.textContent = '創新板合格職業';
+    tag.className = 'industry-tag special';
+  }else{
+    tag.textContent = '一般職業（不限創新板）';
+    tag.className = 'industry-tag';
+  }
+  // 換產業＝重新起步，素質歸零重練
+  player = {age:0, hp:0, atk:0, minion:0};
+  clickCount = 0;
+  document.getElementById('clickcount').textContent = `已練功 0 次`;
+  updateGoldGateAvailability();
+  updateHeroCostume();
+  refreshStatDisplay();
+}
+
+function updateHeroCostume(){
+  if(!currentIndustry) return;
+  const torso = document.getElementById('hero-torso');
+  const hat = document.getElementById('hero-hat');
+  const cape = document.getElementById('hero-cape');
+  const prop = document.getElementById('hero-prop');
+  torso.style.background = currentIndustry.color;
+  hat.style.display = 'block';
+  hat.textContent = currentIndustry.icon;
+  cape.style.background = currentIndustry.cape;
+  prop.textContent = currentIndustry.prop;
+}
+document.getElementById('btn-reroll').addEventListener('click', rerollIndustry);
+
+function updateGoldGateAvailability(){
+  const sub = document.getElementById('gp-gold-sub');
+  if(currentIndustry && currentIndustry.special){
+    sub.textContent = '限定特殊職業・你的產業符合資格 ✓';
+  }else{
+    sub.textContent = '限定特殊職業・目前產業不符資格';
+  }
+}
+
+function reqLine(key){
+  // build a compact comparison across the 3 gates for this stat
+  const parts = [];
+  ['gold','teal','blue'].forEach(g=>{
+    const info = GATES[g];
+    const st = info.stats.find(s=>s.key===key);
+    if(!st) return; // gate doesn't test this stat
+    const v = player[key];
+    const pass = v >= st.need;
+    parts.push(`${info.name}需${st.need}${st.unit}<b class="${pass?'':'short'}">${pass?'✓':'✗'}</b>`);
+  });
+  return parts.join('　｜　');
+}
+function refreshStatDisplay(){
+  document.getElementById('sv-age').textContent = player.age.toFixed(1)+' 年';
+  document.getElementById('sv-hp').textContent = Math.round(player.hp)+' 萬';
+  document.getElementById('sv-atk').textContent = player.atk.toFixed(1)+' %';
+  document.getElementById('sv-minion').textContent = Math.round(player.minion)+' 人';
+  document.getElementById('sb-age').style.width = Math.min(100, player.age/6*100)+'%';
+  document.getElementById('sb-hp').style.width = Math.min(100, player.hp/60000*100)+'%';
+  document.getElementById('sb-atk').style.width = Math.min(100, player.atk/12*100)+'%';
+  document.getElementById('sb-minion').style.width = Math.min(100, player.minion/1000*100)+'%';
+  document.getElementById('sr-age').innerHTML = reqLine('age');
+  document.getElementById('sr-hp').innerHTML = reqLine('hp');
+  document.getElementById('sr-atk').innerHTML = reqLine('atk');
+  document.getElementById('sr-minion').innerHTML = reqLine('minion');
+}
+
+function spawnFloat(text, color){
+  const f = document.createElement('div');
+  f.className = 'floatnum';
+  f.textContent = text;
+  f.style.color = color;
+  f.style.left = (14 + Math.random()*8)+'%';
+  f.style.bottom = '160px';
+  stageEl.appendChild(f);
+  setTimeout(()=>f.remove(), 1000);
+}
+function spawnSpark(){
+  const dummy = document.getElementById('dummy');
+  const s = document.createElement('div');
+  s.className = 'spark';
+  s.textContent = ['✨','💥','⭐'][Math.floor(Math.random()*3)];
+  s.style.left = dummy.style.left;
+  s.style.bottom = '150px';
+  stageEl.appendChild(s);
+  setTimeout(()=>s.remove(), 500);
+}
+
+function rand(min,max){ return Math.random()*(max-min)+min; }
+
+document.getElementById('btn-practice').addEventListener('click', ()=>{
+  heroEl.classList.remove('bump'); void heroEl.offsetWidth; heroEl.classList.add('bump');
+  spawnSpark();
+
+  const profile = GROWTH_PROFILE[currentIndustry.name];
+
+  // 破產危機優先判定：機率很低，但一旦發生，這次點擊直接跳過所有成長，公司歸零重來
+  if(profile.crisis && Math.random() < profile.crisis.p){
+    clickCount++;
+    document.getElementById('clickcount').textContent = `已練功 ${clickCount} 次`;
+    showEventModal({kind:'crisis', msg:profile.crisis.msg}, ()=>{
+      player = {age:0, hp:0, atk:0, minion:0};
+      refreshStatDisplay();
+      ['age','hp','atk','minion'].forEach(k=>{
+        const el = document.getElementById('statcard-'+k);
+        el.classList.remove('flash-bust','flash-boom');
+        void el.offsetWidth;
+        el.classList.add('flash-bust');
+      });
+    });
+    return;
+  }
+
+  const b = profile.base;
+  let dAge = +rand(b.age[0], b.age[1]).toFixed(1);
+  // 資本額改用複利式百分比成長：目前資本額 × 隨機% ＋ 基礎值，越滾越快
+  let dHp = Math.round(player.hp * rand(b.hp.pct[0], b.hp.pct[1]) + rand(b.hp.flat[0], b.hp.flat[1]));
+  let dAtk = +rand(b.atk[0], b.atk[1]).toFixed(2);
+  let dMinion = Math.round(rand(b.minion[0], b.minion[1]));
+
+  // 先骰事件（但不馬上套用效果，等彈窗關閉才生效）
+  let eventMsgs = [];
+  profile.events.forEach(ev=>{
+    if(Math.random() < ev.p) eventMsgs.push(ev);
+  });
+
+  // 基礎成長立即套用、立即顯示
+  player.age = Math.max(0, player.age + dAge);
+  player.hp = Math.max(0, player.hp + dHp);
+  player.atk = Math.max(0, +(player.atk + dAtk).toFixed(2));
+  player.minion = Math.max(0, player.minion + dMinion);
+
+  clickCount++;
+  document.getElementById('clickcount').textContent = `已練功 ${clickCount} 次`;
+  refreshStatDisplay();
+
+  const sign = n => n>=0 ? '+'+n : n.toString();
+  spawnFloat(`${sign(+dAge.toFixed(1))}年 ${sign(Math.round(dHp))}萬 ${sign(+dAtk.toFixed(1))}% ${sign(Math.round(dMinion))}人`, '#9A6B0C');
+
+  if(eventMsgs.length){
+    // 一次只跳一則事件彈窗（優先顯示 bust），數值要等彈窗關閉才真正扣下去
+    const shown = eventMsgs.find(e=>e.kind==='bust') || eventMsgs[0];
+    showEventModal(shown, (resolved)=>{
+      Object.entries(resolved).forEach(([k,v])=>{
+        player[k] = Math.max(0, +(player[k] + v).toFixed(2));
+      });
+      refreshStatDisplay();
+      Object.keys(resolved).forEach(k=>{
+        const el = document.getElementById('statcard-'+k);
+        if(!el) return;
+        el.classList.remove('flash-bust','flash-boom');
+        void el.offsetWidth;
+        el.classList.add(shown.kind==='boom' ? 'flash-boom' : 'flash-bust');
+      });
+    });
+  }
+});
+
+document.getElementById('btn-to-choose').addEventListener('click', ()=>{
+  stage = 1; setStageDots(); showPanel(1);
+  moveHeroTo(30, '150px');
+  renderGatepickState();
+  hintEl.textContent = '選一條路線，走到城門前挑戰守衛吧！';
+});
+document.getElementById('btn-back-village').addEventListener('click', ()=>{
+  backToVillage('繼續練功累積素質！');
+});
+function backToVillage(hintMsg){
+  stage = 0; setStageDots(); showPanel(0);
+  updateVillageStageDisplay();
+  hintEl.textContent = hintMsg;
+}
+
+function currentStageInfo(){
+  if(earned.teal){
+    return {
+      sign:'上櫃基地（準備挑戰上市）',
+      title:'上櫃基地：點擊練功，衝刺上市門檻',
+      desc:'你已經站穩上櫃了！興櫃的入場資格用不到了——接下來繼續點擊練功，把素質練到超過上市的門檻，就能前往最終關卡。',
+      heroPos:{left:'38%', bottom:'150px'},
+      showChecklist:false
+    };
+  }
+  if(earned.gold){
+    return {
+      sign:'創新板基地（已站穩腳步）',
+      title:'創新板基地：持續練功，累積更多素質',
+      desc:'你已經拿下創新板的通關印記！如果還想挑戰上櫃、上市，可以繼續練功累積素質。',
+      heroPos:{left:'16%', bottom:'112px'},
+      showChecklist:false
+    };
+  }
+  return {
+    sign:'新手村（興櫃）',
+    title:'新手村（興櫃）：點擊練功，累積素質',
+    desc:'入場資格用來確認你符合興櫃基本條件（點一下打勾即可）；下方直接開始點擊練功——每點一下「練功」，四項素質都會隨機提升。',
+    heroPos:{left:'16%', bottom:'112px'},
+    showChecklist:true
+  };
+}
+
+function updateVillageStageDisplay(){
+  const info = currentStageInfo();
+  document.getElementById('village-sign').textContent = info.sign;
+  document.getElementById('panel0-title').textContent = info.title;
+  document.getElementById('panel0-desc').textContent = info.desc;
+  document.getElementById('checklist0').style.display = info.showChecklist ? 'grid' : 'none';
+  moveHeroTo(parseFloat(info.heroPos.left), info.heroPos.bottom);
+}
+
+function renderGatepickState(){
+  document.querySelectorAll('.gatepick').forEach(el=>{
+    const g = el.dataset.pick;
+    // 創新板：只有「上櫃真的挑戰成功」或「創新板本身已經過關」才會隱藏
+    if(g === 'gold' && (earned.teal || earned.gold)){
+      el.style.display = 'none';
+      return;
+    }
+    // 上櫃：已經過關就不用再挑戰一次
+    if(g === 'teal' && earned.teal){
+      el.style.display = 'none';
+      return;
+    }
+    el.style.display = '';
+    if(earned[g]){
+      el.style.opacity = '0.6';
+      if(!el.querySelector('.donecheck')){
+        const c = document.createElement('div');
+        c.className = 'donecheck';
+        c.style.cssText = 'font-size:11px;color:var(--ok);font-weight:900;margin-top:4px;';
+        c.textContent = '✓ 已通關';
+        el.appendChild(c);
+      }
+    }else{
+      el.style.opacity = '';
+    }
+  });
+  document.getElementById('panel1-desc').textContent = earned.teal
+    ? '你已經成功過關上櫃了——接下來只會挑戰上市，創新板不會再出現。'
+    : '三條路線都可以直接挑戰——不過一旦「挑戰成功」踏上上櫃，創新板就不會再出現囉（上櫃過關後會直接銜接挑戰上市）。挑戰失敗的話，三條路線仍然都在。';
+}
+
+// ---- gate picks ----
+document.querySelectorAll('.gatepick').forEach(el=>{
+  el.addEventListener('click', ()=>tryOpenChallenge(el.dataset.pick));
+});
+document.querySelectorAll('.gate').forEach(el=>{
+  el.addEventListener('click', ()=>{ if(stage>=1) tryOpenChallenge(el.dataset.gate); });
+});
+
+function gatePos(g){
+  const el = document.getElementById('gate-'+g);
+  const rectStage = stageEl.getBoundingClientRect();
+  const rectGate = el.getBoundingClientRect();
+  const leftPct = ((rectGate.left - rectStage.left + rectGate.width/2 - 17) / rectStage.width)*100;
+  const topPx = (rectGate.top - rectStage.top + rectGate.height - 6);
+  return {leftPct, topPx};
+}
+
+function tryOpenChallenge(g){
+  const info = GATES[g];
+  if(g === 'gold' && (earned.teal || earned.gold)){
+    toast(earned.gold ? '創新板已經挑戰成功過了！' : '已經成功過關上櫃、踏上上市這條路線了，創新板不會再出現囉！', 'fail');
+    return;
+  }
+  if(g === 'teal' && earned.teal){
+    toast('上櫃已經挑戰成功過了，直接前往上市吧！', 'fail');
+    return;
+  }
+  if(info.special && !(currentIndustry && currentIndustry.special)){
+    toast(`「${currentIndustry ? currentIndustry.name : '你的產業'}」不是創新板限定的特殊職業，回新手村重抽產業類別吧！`, 'fail');
+    return;
+  }
+  openChallenge(g);
+}
+
+function openChallenge(g){
+  currentGate = g;
+  const info = GATES[g];
+  document.getElementById('challenge-title').textContent = '挑戰：'+info.name;
+  document.getElementById('challenge-title').style.color = info.dark;
+  document.getElementById('challenge-desc').textContent = info.intro;
+
+  const pos = gatePos(g);
+  heroEl.style.top = pos.topPx+'px';
+  heroEl.style.bottom = 'auto';
+  heroEl.style.left = pos.leftPct+'%';
+
+  renderCompare(info);
+  document.getElementById('resultarea').innerHTML = '';
+  document.getElementById('btn-challenge').disabled = false;
+  stage = 2; setStageDots(); showPanel(2);
+  hintEl.textContent = `站在${info.name}城門前——比比看你的素質夠不夠`;
+}
+
+function renderCompare(info){
+  const box = document.getElementById('compare');
+  box.innerHTML = '';
+  info.stats.forEach(st=>{
+    const v = player[st.key];
+    const pass = v >= st.need;
+    const pct = Math.min(100, v/st.max*100);
+    const needPct = Math.min(100, st.need/st.max*100);
+    const row = document.createElement('div');
+    row.className = 'cmp-row';
+    row.innerHTML = `
+      <label>${st.label}</label>
+      <div class="cmp-bar-bg"><div class="cmp-bar-fill" style="width:${pct}%;background:${pass?'var(--ok)':'var(--red)'};"></div><div class="cmp-bar-need" style="left:${needPct}%;"></div></div>
+      <div class="val">${st.key==='age'?v.toFixed(1):Math.round(v)}${st.unit} ／ 需${st.need}${st.unit}</div>
+      <div class="mark ${pass?'ok':''}">${pass?'✓':'○'}</div>
+    `;
+    box.appendChild(row);
+  });
+}
+
+document.getElementById('btn-back-choose').addEventListener('click', ()=>{
+  stage = 1; setStageDots(); showPanel(1);
+  moveHeroTo(30,'150px');
+  renderGatepickState();
+  hintEl.textContent = '選一條路線，走到城門前挑戰守衛吧！';
+});
+
+document.getElementById('btn-challenge').addEventListener('click', ()=>{
+  const btn = document.getElementById('btn-challenge');
+  if(btn.disabled) return;
+  btn.disabled = true;
+  const info = GATES[currentGate];
+  let allPass = true;
+  let failed = [];
+  info.stats.forEach(st=>{
+    if(player[st.key] < st.need){ allPass=false; failed.push(st.label); }
+  });
+  const resArea = document.getElementById('resultarea');
+  if(allPass){
+    earned[currentGate] = true;
+    document.getElementById('badge-'+currentGate).classList.add('earned');
+    stampGate(currentGate);
+
+    if(info.finalBoss){
+      resArea.innerHTML = `<div class="resultbox ok">🏆 最終關卡守衛單膝下跪：「素質全部達標！恭喜正式掛牌 ${info.name}！」</div>`;
+      toast(`最終晉級成功：${info.name}！`, 'ok');
+      setTimeout(()=>{ stage=3; setStageDots(); showPanel(3); hintEl.textContent = '恭喜完成最終挑戰，正式掛牌上市！'; }, 1100);
+    }else{
+      const nextTip = info.next ? '　接下來可以前往挑戰最終關卡：上市！' : '';
+      resArea.innerHTML = `<div class="resultbox ok">✅ 城門守衛點點頭：「素質都達標了，歡迎晉級 ${info.name}！」${nextTip}</div>`;
+      toast(`晉級成功：${info.name}！`, 'ok');
+      setTimeout(()=>{ backToVillage(`恭喜取得「${info.name}」通關印記！可以繼續練功，或直接前往挑戰下一關。`); }, 1300);
+    }
+  }else{
+    resArea.innerHTML = `<div class="resultbox fail">❌ 守衛搖搖頭：「${failed.join('、')} 還沒達標，回新手村請繼續練功！」</div>`;
+    toast('素質還不夠，請繼續練功！', 'fail');
+    setTimeout(()=>{ backToVillage('剛才的挑戰素質還不夠，繼續練功，練夠了再去挑戰！'); }, 1300);
+  }
+});
+
+function stampGate(g){
+  const el = document.getElementById('gate-'+g);
+  if(el.querySelector('.stamp')) return;
+  const st = document.createElement('div');
+  st.className='stamp'; st.textContent='✓';
+  el.appendChild(st);
+}
+
+document.getElementById('btn-again').addEventListener('click', ()=>{
+  stage = 1; setStageDots(); showPanel(1);
+  moveHeroTo(30,'150px');
+  renderGatepickState();
+  hintEl.textContent = '選一條還沒攻略的路線繼續挑戰！';
+});
+document.getElementById('btn-restart').addEventListener('click', ()=>{ location.reload(); });
+
+setStageDots();
+refreshStatDisplay();
+updateVillageStageDisplay();
+fitStage();
+</script>
+</body>
+</html>
