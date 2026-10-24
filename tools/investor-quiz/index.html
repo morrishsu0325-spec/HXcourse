@@ -125,7 +125,7 @@
       var(--night-2);
     margin-top:30px}
   .g-band{position:absolute;top:0;bottom:0;left:calc(var(--min) / var(--scale) * 100%);width:calc((var(--max) - var(--min)) / var(--scale) * 100%);border-radius:6px;
-    background:linear-gradient(90deg,color-mix(in srgb,var(--c) 55%,transparent),var(--c));box-shadow:0 0 18px color-mix(in srgb,var(--c) 55%,transparent)}
+    background:linear-gradient(90deg,var(--c55),var(--c));box-shadow:0 0 18px var(--c55)}
   .g-band.pt{min-width:6px;transform:translateX(-3px)}
   .g-needle{position:absolute;top:-8px;bottom:-8px;left:calc(var(--val) / var(--scale) * 100%);width:4px;margin-left:-2px;border-radius:2px;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.8)}
   .g-needle::after{content:attr(data-v);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;color:var(--night);background:#fff;padding:1px 7px;border-radius:999px;white-space:nowrap}
@@ -182,8 +182,94 @@
   .cheer .from{font-family:var(--brush);font-size:15px;color:var(--red);margin:0 0 14px;text-align:right}
   .cheer .note{font-family:var(--sans);font-size:13.5px;color:var(--ink-2);margin:0}
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+  .pdfhead{display:none;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--ink-2);margin:0 0 14px;padding:0 4px}
+  .pdfhead b{font-family:var(--brush);font-size:17px;color:var(--red);letter-spacing:.06em}
+  body.pdfmode .pdfhead{display:flex}
+  body.pdfmode .actions{display:none}
+  body.pdfmode .reveal,body.pdfmode section.block,body.pdfmode .desc,body.pdfmode .cheer{box-shadow:none}
+  body.pdfmode .seal.stamp{animation:none}
+  .btn[disabled]{opacity:.6;cursor:wait}
+  @media print{.topbar,.actions,footer{display:none !important}html{background:#fff}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}section.block,.gauge,.reveal,.cheer{break-inside:avoid}}
   footer{margin-top:40px;font-size:12px;color:var(--ink-3);text-align:center}
 
+
+  /* ================= 動畫與特效 ================= */
+  main:not([hidden]){animation:screenIn .55s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes screenIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .fxcanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+  /* 封面 */
+  .cover .kicker{animation:fadeUp .8s .1s both}
+  .cover h1{animation:brushIn 1.1s .25s cubic-bezier(.2,.8,.2,1) both}
+  .cover .sub{animation:fadeUp .8s .8s both}
+  .cover .foot{animation:fadeUp .8s 1.1s both}
+  @keyframes brushIn{from{clip-path:inset(0 100% 0 0);opacity:.2;transform:translateX(-8px)}to{clip-path:inset(0 0 0 0);opacity:1;transform:none}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .btn.glow{animation:glow 2.4s 2s ease-in-out infinite}
+  @keyframes glow{0%,100%{box-shadow:0 8px 20px rgba(229,83,61,.35)}50%{box-shadow:0 8px 34px rgba(229,83,61,.75),0 0 0 6px rgba(229,83,61,.15)}}
+  /* 過場 */
+  .gate .kicker{animation:fadeUp .6s .3s both}
+  .gate h2{animation:brushIn .9s .45s cubic-bezier(.2,.8,.2,1) both}
+  .gate .txt,.gate .n{animation:fadeUp .6s .8s both}
+  .gate .btn{animation:fadeUp .6s 1s both}
+  /* 題目進場 */
+  .qanim{animation:qIn .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 70ms)}
+  @keyframes qIn{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+  .progress i.now{background:linear-gradient(90deg,var(--gold),#FFE7A3,var(--gold));background-size:200% 100%;animation:shim 1.4s linear infinite}
+  @keyframes shim{to{background-position:-200% 0}}
+  .opt{position:relative;overflow:hidden}
+  .ink{position:absolute;border-radius:50%;width:260px;height:260px;background:radial-gradient(circle,rgba(229,83,61,.32),rgba(229,83,61,0) 70%);transform:translate(-50%,-50%) scale(0);animation:ink .6s ease-out forwards;pointer-events:none}
+  @keyframes ink{to{transform:translate(-50%,-50%) scale(1.6);opacity:0}}
+  /* 鑑定中 */
+  .judging{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:rgba(14,22,30,.94);color:#fff;animation:fadeIn .3s both}
+  .judging.out{animation:fadeOut .45s both}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes fadeOut{to{opacity:0;visibility:hidden}}
+  .judging svg{width:110px;height:110px;animation:spin 1.6s linear infinite}
+  .judging .t{font-family:var(--brush);font-weight:700;font-size:22px;letter-spacing:.2em}
+  .judging .s{font-size:13.5px;color:#B9C4CE;min-height:1.4em}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  /* 揭曉 */
+  .stage::before{content:"";position:absolute;left:50%;top:46%;width:420px;height:420px;margin:-210px 0 0 -210px;border-radius:50%;
+    background:conic-gradient(from 0deg,rgba(246,207,107,0) 0deg,rgba(246,207,107,.28) 18deg,rgba(246,207,107,0) 36deg,rgba(246,207,107,0) 60deg,rgba(246,207,107,.22) 78deg,rgba(246,207,107,0) 96deg,rgba(246,207,107,0) 120deg,rgba(246,207,107,.28) 138deg,rgba(246,207,107,0) 156deg,rgba(246,207,107,0) 180deg,rgba(246,207,107,.22) 198deg,rgba(246,207,107,0) 216deg,rgba(246,207,107,0) 240deg,rgba(246,207,107,.28) 258deg,rgba(246,207,107,0) 276deg,rgba(246,207,107,0) 300deg,rgba(246,207,107,.22) 318deg,rgba(246,207,107,0) 336deg);
+    -webkit-mask:radial-gradient(circle,#000 20%,transparent 68%);mask:radial-gradient(circle,#000 20%,transparent 68%);animation:rays 18s linear infinite,fadeIn 1.2s .4s both;pointer-events:none}
+  .stage::after{content:"";position:absolute;left:50%;top:50%;width:260px;height:260px;margin:-130px 0 0 -130px;border-radius:50%;background:radial-gradient(circle,rgba(246,207,107,.45),rgba(246,207,107,0) 65%);animation:breathe 3.2s ease-in-out infinite;pointer-events:none}
+  @keyframes rays{to{transform:rotate(360deg)}}
+  @keyframes breathe{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1.06)}}
+  .stage img{position:relative;z-index:1}
+  .reveal.go .lead{animation:fadeUp .6s .1s both}
+  .reveal.go .stage img{animation:heroIn 1.1s .25s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes heroIn{from{opacity:0;transform:translateY(40px) scale(.94);filter:blur(6px) drop-shadow(0 14px 22px rgba(0,0,0,.35))}to{opacity:1;transform:none;filter:drop-shadow(0 14px 22px rgba(0,0,0,.35))}}
+  .stage .seal{z-index:2}
+  .reveal.go .seal.stamp{animation:stamp .6s 1.05s cubic-bezier(.2,1.4,.4,1) both}
+  .fullname .ch{display:inline-block;animation:charIn .55s cubic-bezier(.2,1.2,.4,1) both;animation-delay:calc(1.3s + var(--k) * 110ms)}
+  @keyframes charIn{from{opacity:0;transform:translateY(18px) scale(1.4);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+  .reveal.go .motto{animation:fadeUp .7s 1.85s both}
+  .reveal.go .badges span{animation:fadeUp .5s both;animation-delay:calc(2.05s + var(--k) * 120ms)}
+  .flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(255,236,180,.85),rgba(255,236,180,0) 60%);z-index:3;pointer-events:none;animation:flash 1.1s 1.05s ease-out both}
+  @keyframes flash{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+  /* 捲動進場 */
+  .fx{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+  .fx.in{opacity:1;transform:none}
+  .seg i{transition:background .35s;transition-delay:calc(var(--k,0) * 70ms + .25s)}
+  .axis:not(.in) .seg i.on{background:#ECEAE5}
+  .gauge .g-band:not(.pt){transform-origin:left center;transform:scaleX(0);transition:transform 1.1s cubic-bezier(.2,.8,.2,1) .25s}
+  .gauge.in .g-band:not(.pt){transform:scaleX(1)}
+  .gauge .g-needle,.gauge .g-limit{opacity:0;transition:opacity .5s 1.1s}
+  .gauge.in .g-needle,.gauge.in .g-limit{opacity:1}
+  .gauge.in .g-limit{animation:pop .5s 1.1s cubic-bezier(.2,1.4,.4,1) both}
+  @keyframes pop{from{transform:translate(-50%,-50%) scale(0)}to{transform:translate(-50%,-50%) scale(1)}}
+  .cell.me{animation:pulse 2.2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 6px 18px rgba(229,83,61,.35),0 0 0 0 rgba(229,83,61,.5)}50%{box-shadow:0 6px 18px rgba(229,83,61,.35),0 0 0 10px rgba(229,83,61,0)}}
+  .stack div{transition:width 1s cubic-bezier(.2,.8,.2,1)}
+  .stack:not(.in) div{width:0 !important}
+  /* PDF 時一律顯示最終畫面 */
+  body.pdfmode .fx,body.pdfmode .fx.in{opacity:1 !important;transform:none !important;transition:none !important}
+  body.pdfmode *{animation:none !important;transition:none !important}
+  body.pdfmode .axis .seg i.on{background:var(--c) !important}
+  body.pdfmode .gauge .g-band{transform:none !important}
+  body.pdfmode .gauge .g-needle,body.pdfmode .gauge .g-limit{opacity:1 !important}
+  body.pdfmode .stack div{width:auto}
+  body.pdfmode .stage::before,body.pdfmode .flash{display:none}
   @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
   @media (max-width:420px){.gate h2{font-size:30px}.qbanner{height:62px}.cover h1{font-size:38px}.fullname{font-size:36px}.qtext{font-size:19px}.legend{grid-template-columns:1fr}.roster img{height:100px}}
 </style>
@@ -207,13 +293,13 @@
 
   <!-- 開始 -->
   <main id="intro">
-    <div class="cover">
+    <div class="cover" id="cover">
       <p class="kicker">許仙秘笈・EP8</p>
       <h1>投資屬性<br>測驗</h1>
       <p class="sub">在許仙秘笈的武林裡，你是哪一種投資人？</p>
       <div class="foot">
         <p class="note">沒有標準答案，每個選項都是一種合理的投資風格。憑你最真實的想法作答，找出屬於你的角色與資產配置。</p>
-        <button class="btn" id="startBtn">開始測驗</button><span class="meta">共 13 題・約 3 分鐘</span>
+        <button class="btn glow" id="startBtn">開始測驗</button><span class="meta">共 13 題・約 3 分鐘</span>
       </div>
     </div>
   </main>
@@ -246,7 +332,8 @@
 
   <!-- 結果 -->
   <main id="result" hidden>
-    <div class="reveal">
+    <div class="pdfhead"><b>許仙秘笈投資學院｜投資屬性測驗結果</b><span id="pdfDate"></span></div>
+    <div class="reveal" id="reveal">
       <p class="lead">你的投資人角色是</p>
       <div class="stage" id="stage">
         <img id="roleImg" alt="">
@@ -305,12 +392,18 @@
     </div>
 
     <div class="actions">
-      <button class="btn" id="retryBtn">重新測驗</button>
+      <button class="btn" id="pdfBtn">下載結果 PDF</button>
+      <button class="btn ghost" id="retryBtn">重新測驗</button>
       <a class="btn ghost" href="../../index.html">回課堂工具箱</a>
     </div>
   </main>
 
-  <footer>僅供許仙秘笈投資學院課堂教學使用，測驗結果為教學參考，不構成投資建議</footer>
+  <div class="judging" id="judging" hidden>
+  <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/><circle cx="50" cy="50" r="40" fill="none" stroke="#E5533D" stroke-width="6" stroke-linecap="round" stroke-dasharray="70 182"/><circle cx="50" cy="50" r="28" fill="none" stroke="#F6CF6B" stroke-width="3" stroke-linecap="round" stroke-dasharray="30 146" transform="rotate(140 50 50)"/></svg>
+  <p class="t">推演武林身分</p>
+  <p class="s" id="judgeText"></p>
+</div>
+<footer>僅供許仙秘笈投資學院課堂教學使用，測驗結果為教學參考，不構成投資建議</footer>
 </div>
 
 <script>
@@ -390,7 +483,7 @@ const GATES = {
 const PART_PIC = {1:"path-market", 2:"path-summit"};
 ["path-market","path-summit","map"].forEach(n => { const i = new Image(); i.src = "img/" + n + ".webp"; });
 
-let idx = 0;
+let idx = 0, RESULT_NAME = "", RESULT_T = "", RESULT_R = "";
 const ans = new Array(Q.length).fill(null);
 const $ = id => document.getElementById(id);
 function show(id){ ["intro","gate","quiz","result"].forEach(s => $(s).hidden = s !== id); window.scrollTo(0,0); }
@@ -426,10 +519,11 @@ function renderQ(){
     btn.setAttribute("role","radio");
     btn.setAttribute("aria-checked", ans[idx] === i ? "true" : "false");
     btn.innerHTML = '<b><span class="k">' + "ABCD"[i] + '</span>' + o.b + '</b>' + (o.s ? '<span>' + o.s + '</span>' : '');
-    btn.onclick = () => pick(i);
+    btn.onclick = (ev) => { inkAt(btn, ev); pick(i); };
     box.appendChild(btn);
   });
   $("backBtn").hidden = idx === 0;
+  animateQ();
 }
 
 function pick(i){
@@ -451,6 +545,7 @@ function pct(v){ return (Math.round(v * 10) / 10) + "%"; }
 function money(base, p){ return (Math.round(base * p / 10) / 10).toLocaleString("zh-TW") + " 萬"; }
 
 /* 速限橫條：rng=[最小,最大,建議]；scale=刻度最大值 */
+function rgba(hex, a){ const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
 function gauge(o){
   const sc = o.scale || 100;
   if (o.off) {
@@ -459,7 +554,7 @@ function gauge(o){
       scaleRow(sc) + '</div>';
   }
   const [mn, mx, v] = o.rng;
-  const vars = '--c:' + o.c + ';--min:' + mn + ';--max:' + mx + ';--val:' + (v ?? 0) + ';--scale:' + sc + (o.lim != null ? ';--lim:' + o.lim : '');
+  const vars = '--c:' + o.c + ';--c55:' + rgba(o.c, .55) + ';--min:' + mn + ';--max:' + mx + ';--val:' + (v ?? 0) + ';--scale:' + sc + (o.lim != null ? ';--lim:' + o.lim : '');
   return '<div class="gauge" style="' + vars + '">' +
     '<div class="g-head"><b>' + o.name + '</b><span class="g-val">' + (v == null ? o.noVal : '建議<strong>' + v + '%</strong>') + '</span></div>' +
     '<p class="g-sub">' + o.sub + '</p>' +
@@ -577,15 +672,165 @@ function renderResult(){
   };
   amt.oninput = draw; draw();
 
+  RESULT_NAME = tName + rName; RESULT_T = tName; RESULT_R = rName;
   const e = ENTRY[ans[1]];
   $("entry").innerHTML = '<b>' + e.t + '</b>' + e.d;
   $("cheer").textContent = R.cheer;
-  show("result");
+  playResult();
 }
 
 $("startBtn").onclick = () => { idx = 0; openGate(1); };
 $("backBtn").onclick = () => { if (idx > 0) { idx--; renderQ(); } };
-$("retryBtn").onclick = () => { ans.fill(null); idx = 0; show("intro"); };
+
+/* ================= 特效 ================= */
+const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function particles(host, opt){
+  if (REDUCED) return () => {};
+  const cv = document.createElement("canvas"); cv.className = "fxcanvas"; cv.setAttribute("data-html2canvas-ignore", "true");
+  host.appendChild(cv);
+  const ctx = cv.getContext("2d"), dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0, raf = 0, stopped = false, t0 = performance.now();
+  const size = () => { W = host.clientWidth; H = host.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  size(); window.addEventListener("resize", size);
+  const P = [];
+  const add = (burst) => {
+    const petal = Math.random() < (opt.petals || 0);
+    const p = {petal, x: burst ? W * (.5 + (Math.random() - .5) * .3) : Math.random() * W, y: burst ? H * .45 : (opt.fromTop ? -10 : H + 10),
+      vx: burst ? (Math.random() - .5) * 7 : (Math.random() - .5) * .4, vy: burst ? -Math.random() * 7 - 2 : (opt.fromTop ? Math.random() * .6 + .3 : -(Math.random() * .6 + .25)),
+      r: petal ? Math.random() * 4 + 4 : Math.random() * 1.8 + .6, a: 0, rot: Math.random() * 6.28, vr: (Math.random() - .5) * .1, life: 0, max: burst ? 120 + Math.random() * 60 : 9999};
+    p.a = burst ? 1 : 0; P.push(p);
+  };
+  for (let i = 0; i < (opt.count || 30); i++) { add(false); P[i].y = Math.random() * H; }
+  for (let i = 0; i < (opt.burst || 0); i++) add(true);
+  const draw = (now) => {
+    if (stopped) return;
+    ctx.clearRect(0, 0, W, H);
+    const tt = (now - t0) / 1000;
+    for (let i = P.length - 1; i >= 0; i--) {
+      const p = P[i]; p.life++;
+      if (p.max < 9999) { p.vy += .12; p.vx *= .985; p.a = Math.max(0, 1 - p.life / p.max); }
+      else { p.a = Math.min(1, p.a + .02); p.x += Math.sin(tt * 1.2 + i) * .25; }
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      if (p.life > p.max || p.y < -20 || p.y > H + 20) { P.splice(i, 1); if (p.max === 9999) add(false); continue; }
+      ctx.save(); ctx.globalAlpha = p.a * (p.petal ? .85 : .9); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      if (p.petal) { ctx.fillStyle = "#E5533D"; ctx.beginPath(); ctx.ellipse(0, 0, p.r, p.r * .55, 0, 0, 6.283); ctx.fill(); }
+      else { const g = ctx.createRadialGradient(0, 0, 0, 0, 0, p.r * 3); g.addColorStop(0, "rgba(255,236,170,1)"); g.addColorStop(1, "rgba(246,207,107,0)"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, p.r * 3, 0, 6.283); ctx.fill(); }
+      ctx.restore();
+    }
+    raf = requestAnimationFrame(draw);
+  };
+  raf = requestAnimationFrame(draw);
+  return () => { stopped = true; cancelAnimationFrame(raf); window.removeEventListener("resize", size); cv.remove(); };
+}
+let stopCover = particles($("cover"), {count: 26});
+let stopHero = null;
+
+function animateQ(){
+  const els = [$("qtitle"), $("qtext"), ...$("opts").children];
+  els.forEach((el, i) => { el.classList.remove("qanim"); void el.offsetWidth; el.style.setProperty("--i", i); el.classList.add("qanim"); });
+}
+function inkAt(btn, ev){
+  if (REDUCED) return;
+  const r = btn.getBoundingClientRect(), d = document.createElement("span");
+  d.className = "ink";
+  d.style.left = ((ev && ev.clientX ? ev.clientX : r.left + r.width / 2) - r.left) + "px";
+  d.style.top = ((ev && ev.clientY ? ev.clientY : r.top + r.height / 2) - r.top) + "px";
+  btn.appendChild(d); setTimeout(() => d.remove(), 650);
+}
+
+let io = null;
+function watchFx(){
+  const targets = document.querySelectorAll("#result .desc, #result section.block, #result .cheer, #result .gauge, #result .axis, #result .stack");
+  targets.forEach(el => { el.classList.remove("in"); if (!el.matches(".gauge,.axis,.stack")) el.classList.add("fx"); });
+  document.querySelectorAll("#axes .seg").forEach(seg => [...seg.children].forEach((i, k) => i.style.setProperty("--k", k)));
+  if (io) io.disconnect();
+  if (!("IntersectionObserver" in window)) { targets.forEach(el => el.classList.add("in")); return; }
+  io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), {threshold: .18});
+  targets.forEach(el => io.observe(el));
+}
+
+const JUDGE_LINES = ["整理你的風險承受度…", "衡量你的出手頻率…", "比對你的配息偏好…", "翻閱許仙秘笈…"];
+function playResult(){
+  const j = $("judging"), txt = $("judgeText");
+  let k = 0; txt.textContent = JUDGE_LINES[0];
+  const timer = setInterval(() => { k = (k + 1) % JUDGE_LINES.length; txt.textContent = JUDGE_LINES[k]; }, 520);
+  j.classList.remove("out"); j.hidden = false;
+  setTimeout(() => {
+    clearInterval(timer);
+    // 角色名逐字落下
+    let k2 = 0;
+    const chars = t => [...t].map(c => '<span class="ch" style="--k:' + (k2++) + '">' + c + '</span>').join("");
+    $("fullname").innerHTML = '<span class="t">' + chars(RESULT_T) + '</span>' + chars(RESULT_R);
+    $("badges").querySelectorAll("span").forEach((b, i) => b.style.setProperty("--k", i));
+    const rv = $("reveal"); rv.classList.remove("go");
+    rv.querySelectorAll(".flash").forEach(f => f.remove());
+    const fl = document.createElement("div"); fl.className = "flash"; fl.setAttribute("data-html2canvas-ignore", "true"); rv.appendChild(fl);
+    show("result");
+    void rv.offsetWidth; rv.classList.add("go");
+    watchFx();
+    if (stopHero) stopHero();
+    setTimeout(() => { if (!$("result").hidden) stopHero = particles(rv, {count: 22, burst: 70, petals: .4, fromTop: false}); }, 1050);
+    j.classList.add("out"); setTimeout(() => { j.hidden = true; }, 460);
+  }, REDUCED ? 200 : 2100);
+}
+
+/* ===== 結果輸出成 PDF ===== */
+const LIBS = {
+  h2c:"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+  pdf:"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+};
+function loadScript(src){ return new Promise((ok, no) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+async function savePdf(){
+  const btn = $("pdfBtn"), label = btn.textContent;
+  btn.disabled = true; btn.textContent = "產生 PDF 中…";
+  const d = new Date();
+  $("pdfDate").textContent = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate();
+  try {
+    if (!window.html2canvas) await loadScript(LIBS.h2c);
+    if (!window.jspdf) await loadScript(LIBS.pdf);
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    document.body.classList.add("pdfmode");
+    const node = $("result");
+    const scale = 2;
+    const canvas = await html2canvas(node, {scale, backgroundColor:"#EEF3F7", useCORS:true, logging:false});
+    // 分頁時盡量切在區塊之間，不把卡片切成兩半
+    const top0 = node.getBoundingClientRect().top;
+    const cuts = [...node.querySelectorAll(".pdfhead,.reveal,.desc,section.block,.gauge,.axis,.mapbox,.stack,.legend,.cheer")].filter(el => el.offsetParent !== null)
+      .map(el => Math.round((el.getBoundingClientRect().bottom - top0 + 8) * scale));
+    document.body.classList.remove("pdfmode");
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({unit:"mm", format:"a4"});
+    const PW = 210, PH = 297, M = 10, W = PW - M * 2;
+    const pxPerMm = canvas.width / W, pageH = Math.floor((PH - M * 2) * pxPerMm);
+    let y = 0, first = true;
+    while (y < canvas.height - 2) {
+      let end = Math.min(y + pageH, canvas.height);
+      if (end < canvas.height) {
+        const ok = cuts.filter(c => c > y + pageH * 0.3 && c <= end);
+        if (ok.length) end = ok[ok.length - 1];
+      }
+      const h = end - y, c = document.createElement("canvas");
+      c.width = canvas.width; c.height = h;
+      const cx = c.getContext("2d");
+      cx.fillStyle = "#EEF3F7"; cx.fillRect(0, 0, c.width, h);
+      cx.drawImage(canvas, 0, y, canvas.width, h, 0, 0, canvas.width, h);
+      if (!first) pdf.addPage();
+      pdf.setFillColor(238, 243, 247); pdf.rect(0, 0, PW, PH, "F");
+      pdf.addImage(c.toDataURL("image/jpeg", 0.9), "JPEG", M, M, W, h / pxPerMm);
+      first = false; y = end;
+    }
+    pdf.save("投資屬性測驗結果_" + RESULT_NAME + ".pdf");
+  } catch (err) {
+    console.error("PDF 產生失敗", err && (err.stack || err.message || err.type || err));
+    document.body.classList.remove("pdfmode");
+    alert("這台裝置無法直接產生 PDF，接下來會開啟列印畫面，請選擇「儲存為 PDF」。");
+    window.print();
+  } finally {
+    btn.disabled = false; btn.textContent = label;
+  }
+}
+$("pdfBtn").onclick = savePdf;
+$("retryBtn").onclick = () => { ans.fill(null); idx = 0; if (stopHero) { stopHero(); stopHero = null; } show("intro"); };
 </script>
 </body>
 </html>
