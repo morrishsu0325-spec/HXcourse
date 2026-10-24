@@ -262,6 +262,53 @@
   @keyframes pulse{0%,100%{box-shadow:0 6px 18px rgba(229,83,61,.35),0 0 0 0 rgba(229,83,61,.5)}50%{box-shadow:0 6px 18px rgba(229,83,61,.35),0 0 0 10px rgba(229,83,61,0)}}
   .stack div{transition:width 1s cubic-bezier(.2,.8,.2,1)}
   .stack:not(.in) div{width:0 !important}
+  /* 分頁 */
+  .tabs{position:sticky;top:8px;z-index:20;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:18px 0 0;padding:5px;border-radius:999px;background:rgba(28,39,49,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 8px 20px rgba(28,39,49,.2)}
+  .tabs button{border:0;border-radius:999px;padding:10px 4px;font-size:14.5px;font-weight:700;letter-spacing:.06em;background:transparent;color:#AEB9C3;cursor:pointer;transition:background .2s,color .2s}
+  .tabs button.on{background:var(--red);color:#fff;box-shadow:0 4px 12px rgba(229,83,61,.4)}
+  .tabpanel:not([hidden]){animation:screenIn .45s cubic-bezier(.2,.8,.2,1) both}
+  .nextTab{display:block;width:100%;margin-top:18px;border:1.5px dashed rgba(229,83,61,.5);background:rgba(255,255,255,.7);color:var(--red);font-weight:700;font-size:15px;letter-spacing:.04em;padding:14px;border-radius:16px;cursor:pointer}
+  /* 投資大師 */
+  .master{margin-top:18px;border-radius:24px;padding:30px 22px 24px;text-align:center;color:#fff;position:relative;overflow:hidden;
+    background:radial-gradient(120% 70% at 50% 0%,#33475A 0%,#1C2731 55%,#121A22 100%);box-shadow:0 18px 40px rgba(18,26,34,.35)}
+  .master::before{content:"";position:absolute;inset:0;background:url(img/ink.webp) repeat;background-size:420px auto;opacity:.06;pointer-events:none}
+  .master > *{position:relative}
+  .master .k{font-size:12.5px;letter-spacing:.3em;color:#F6CF6B;margin:0 0 18px}
+  .avatar{position:relative;width:200px;height:200px;margin:0 auto 20px}
+  .avatar::before{content:"";position:absolute;inset:-26px;border-radius:50%;background:radial-gradient(circle,rgba(246,207,107,.38),rgba(246,207,107,0) 68%);animation:breathe 3.2s ease-in-out infinite}
+  .avatar .ring{position:absolute;inset:0;border-radius:50%;padding:4px;background:conic-gradient(from 210deg,#F6CF6B,#B8862B,#F6CF6B,#FFF1C7,#F6CF6B)}
+  .avatar .face{width:100%;height:100%;border-radius:50%;overflow:hidden;background:#263544;display:flex;align-items:center;justify-content:center;border:3px solid #1C2731}
+  .avatar img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.06)}
+  .avatar .ini{font-family:var(--brush);font-weight:900;font-size:64px;color:#F6CF6B}
+  .master h3{font-family:var(--brush);font-weight:900;font-size:32px;letter-spacing:.06em;margin:0}
+  .master .en{font-size:13px;letter-spacing:.12em;color:#93A1AE;margin:2px 0 10px}
+  .master .tag{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.1em;padding:4px 16px;border-radius:999px;background:var(--red);box-shadow:0 4px 14px rgba(229,83,61,.45)}
+  .master .who{font-size:14px;color:#F6CF6B;margin:14px 0 6px;font-weight:700}
+  .master .intro{font-size:14.5px;line-height:1.85;color:#DCE3E9;margin:0 auto;max-width:30em;text-align:left}
+  .master .way{margin:16px auto 0;max-width:30em;text-align:left;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.07);border-left:3px solid #F6CF6B;font-size:14px}
+  .master .way b{color:#F6CF6B}
+  .master .mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px auto 4px;max-width:30em}
+  .master .mstats div{background:rgba(255,255,255,.06);border:1px solid rgba(246,207,107,.22);border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;gap:4px;min-width:0}
+  .master .mstats b{font-family:var(--brush);font-weight:900;font-size:20px;color:#F6CF6B;line-height:1.2}
+  .master .mstats span{font-size:11.5px;color:#C9D3DB;line-height:1.45}
+  .master .mlabel{font-size:12px;letter-spacing:.25em;color:#F6CF6B;margin:18px auto 6px;max-width:30em;text-align:left}
+  .master .common{margin:12px auto 0;max-width:30em;text-align:left;padding:12px 16px;border-radius:14px;background:var(--red);font-size:14.5px;font-weight:700}
+  .master .common span{display:block;font-size:11.5px;font-weight:500;letter-spacing:.2em;opacity:.85;margin-bottom:2px}
+  @media (max-width:420px){.master .mstats{grid-template-columns:1fr}.master .mstats div{flex-direction:row;align-items:baseline;gap:10px;text-align:left}.master .mstats b{flex:none}}
+  .master .src{font-size:11.5px;color:#7F8E9C;margin:14px 0 0;line-height:1.6}
+  #tab-master:not([hidden]) .avatar{animation:heroIn .9s .1s cubic-bezier(.2,.8,.2,1) both}
+  #tab-master:not([hidden]) .master h3,#tab-master:not([hidden]) .master .en,#tab-master:not([hidden]) .master .tag{animation:fadeUp .6s .5s both}
+  #tab-master:not([hidden]) .master .who,#tab-master:not([hidden]) .master .mstats{animation:fadeUp .6s .7s both}
+  #tab-master:not([hidden]) .master .mlabel,#tab-master:not([hidden]) .master .intro,#tab-master:not([hidden]) .master .way,#tab-master:not([hidden]) .master .common{animation:fadeUp .6s .95s both}
+  @media print{.tabs,.nextTab{display:none !important}.tabpanel[hidden]{display:block !important}}
+  .sh-master{margin-top:12px;display:flex;align-items:center;gap:12px;border-radius:14px;padding:10px 16px;background:#1C2731;color:#fff}
+  .sh-master .k{font-size:11px;letter-spacing:.15em;color:#F6CF6B;flex:none}
+  .sh-av{width:40px;height:40px;border-radius:50%;flex:none;overflow:hidden;border:2px solid #F6CF6B;background:#263544;display:flex;align-items:center;justify-content:center;font-family:var(--brush);font-weight:900;font-size:18px;color:#F6CF6B}
+  .sh-av img{width:100%;height:100%;object-fit:cover}
+  .sh-master b{font-family:var(--brush);font-weight:900;font-size:19px;flex:none}
+  .sh-master .tg{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--red);flex:none}
+  .sh-master span.w{font-size:12px;color:#DCE3E9;line-height:1.5}
+  body.pdfmode .master{box-shadow:none}
   /* ================= 一頁式 PDF 版面 ================= */
   .sheet{position:absolute;left:-12000px;top:0;width:794px;min-height:1123px;padding:30px 34px 22px;background:#F4F1EA url(img/ink.webp) repeat;background-size:520px auto;color:var(--ink);font-family:var(--sans);line-height:1.5}
   .sheet *{animation:none !important;transition:none !important}
@@ -407,6 +454,13 @@
       <p class="motto" id="motto"></p>
       <div class="badges" id="badges"></div>
     </div>
+    <nav class="tabs" id="tabs" role="tablist">
+      <button role="tab" data-tab="profile" class="on">屬性分析</button>
+      <button role="tab" data-tab="plan">建議配置</button>
+      <button role="tab" data-tab="master">投資大師</button>
+    </nav>
+
+    <div class="tabpanel" id="tab-profile">
     <p class="desc" id="desc"></p>
 
     <section class="block">
@@ -420,7 +474,10 @@
       <p class="hint">風險承受度決定上下，主動程度決定左右</p>
       <div class="mapbox"><div class="map" id="map"></div></div>
     </section>
+    <button class="nextTab" data-go="plan">下一頁：看你的建議配置 →</button>
+    </div>
 
+    <div class="tabpanel" id="tab-plan" hidden>
     <section class="block">
       <h2 class="h2">建議資產配置</h2>
       <p class="hint">有顏色的區段是建議範圍，白色指針是建議數字。建議數字是起點，可以在範圍內依自己的情況微調。</p>
@@ -448,6 +505,12 @@
       <h2 class="h2">進場建議</h2>
       <div class="tip" id="entry"></div>
     </section>
+    <button class="nextTab" data-go="master">下一頁：你像哪一位投資大師？ →</button>
+    </div>
+
+    <div class="tabpanel" id="tab-master" hidden>
+      <section class="master" id="master"></section>
+    </div>
 
     <div class="cheer">
       <p id="cheer"></p>
@@ -533,6 +596,33 @@ const TITLES = {
   "蓄勢":{motto:"閉關蓄力，等待爆發", desc:"你把收益全部投入再成長，追求資產長期累積的最大力量。", hd:[0,20,0]}
 };
 const GRID = [["禪師","軍師"],["掌門","將領"],["大俠","劍聖"]];
+/* 投資風格相近的投資大師（依公開資料整理） */
+const MASTERS = {
+  "禪師":{photo:"bogle", name:"約翰．柏格", en:"John Bogle", life:"1929–2019", tag:"指數基金之父", who:"先鋒集團（Vanguard）創辦人",
+    stats:[["1975","創立先鋒集團"],["1976","推出第一檔散戶能買的指數基金"],["數兆美元","先鋒今天管理的資產規模"]],
+    intro:"當年華爾街嘲笑指數基金是「甘於平庸」，他卻堅持讓一般人用最低的成本買下整個市場。幾十年後，指數化投資成了全世界散戶最主流的方式。巴菲特曾說，如果要為對美國投資人貢獻最大的人立一座雕像，那個人非柏格莫屬。",
+    way:"買進整個市場的指數基金，壓低成本，長期不動。", common:"你們都相信：時間和紀律，比預測行情更可靠。"},
+  "軍師":{photo:"graham", name:"班傑明．葛拉漢", en:"Benjamin Graham", life:"1894–1976", tag:"價值投資之父", who:"《智慧型股票投資人》作者．巴菲特的老師",
+    stats:[["1934","出版《證券分析》，奠定價值投資"],["1949","出版《智慧型股票投資人》"],["股神之師","巴菲特的老師，也是他的第一位老闆"]],
+    intro:"他在 1929 年大崩盤中損失慘重，痛定思痛後提出「安全邊際」：只在價格明顯低於公司真實價值時才買，先求不虧，再求獲利。巴菲特稱他的《智慧型股票投資人》是有史以來最好的投資書。",
+    way:"深入研究財報，用便宜的價格買進體質穩健的公司。", common:"你們都習慣：先把功課做足，再小心出手。"},
+  "掌門":{photo:"dalio", name:"雷．達利歐", en:"Ray Dalio", life:"1949–", tag:"全天候配置", who:"橋水基金（Bridgewater）創辦人",
+    stats:[["1975","在自家公寓創立橋水基金"],["全球最大","避險基金之一"],["2008","金融海嘯前就提出預警"]],
+    intro:"他從兩房公寓起家，把橋水做成全球規模最大的避險基金之一。他設計的「全天候」配置不預測景氣，而是把資產分散在各種經濟環境下都撐得住的組合裡。他把自己的經營與投資心法寫成暢銷書《原則》。",
+    way:"先把資產配置定好，讓組合在各種景氣下都站得穩。", common:"你們都重視：先把根基打穩，讓配置替你扛住風浪。"},
+  "將領":{photo:"buffett", name:"華倫．巴菲特", en:"Warren Buffett", life:"1930–", tag:"股神", who:"波克夏．海瑟威的傳奇掌門人",
+    stats:[["約 19.9%","波克夏 1965–2024 年化報酬"],["約 2 倍","同期 S&P 500 年化約 10.4%"],["60 年","帶領波克夏的時間"]],
+    intro:"11 歲買下人生第一張股票，後來把一家快撐不下去的紡織廠波克夏，打造成市值曾突破 1 兆美元的企業集團。他只買自己看得懂、有長期競爭優勢的公司，紀律極嚴，等好價格時可以等上好幾年。",
+    way:"研究透徹後集中持有好公司，耐心等待好價格再出手。", common:"你們都懂得：主動研究，但每一步都要有章法。"},
+  "大俠":{photo:"kostolany", name:"安德烈．科斯托蘭尼", en:"André Kostolany", life:"1906–1999", tag:"德國股市教父", who:"《一個投機者的告白》作者",
+    stats:[["70+ 年","股市實戰經歷"],["2 次","世界大戰與無數次崩盤都經歷過"],["遛狗理論","EP6 心法的原創者"]],
+    intro:"他在股市闖蕩超過 70 年，經歷兩次世界大戰和無數次崩盤，多次大起大落後依然屹立不搖，是德語世界最知名的投資家。我們在 EP6 學到的「遛狗理論」就是他提出的：股價像小狗，會一下跑前、一下落後，但終究跟著主人（經濟）走。",
+    way:"看準大趨勢買進好股票後長抱，不被短期波動嚇跑。", common:"你們都相信：看得遠，就不怕眼前的風浪。"},
+  "劍聖":{photo:"soros", name:"喬治．索羅斯", en:"George Soros", life:"1930–", tag:"金融巨鱷", who:"量子基金創辦人",
+    stats:[["約 10 億美元","1992 年放空英鎊一役的獲利"],["約 30%","量子基金長期年化報酬（常見估計）"],["1992","被稱為「擊垮英格蘭銀行的人」"]],
+    intro:"1992 年，他看準英鎊被高估，重押放空，逼得英國退出歐洲匯率機制，一戰成名。他敢在看準時重押，也以果斷認錯聞名：一發現看錯，就立刻撤退，絕不戀戰。",
+    way:"看準機會時果斷重押，發現看錯時立刻撤退。", common:"你們都具備：出手的勇氣，以及認錯的果斷。"}
+};
 const ENTRY = [
   {t:"單筆資金分批進場", d:"你不打算再追加資金，建議把這筆錢分批投入，依持股比例區間逐步布局，不要一次全部買進。"},
   {t:"依許仙劍法找買點加碼", d:"你會固定主動加碼，建議依許仙劍法「順大勢，逆小勢」找買點，等鐘擺回到中心附近再出手。"},
@@ -670,6 +760,18 @@ function renderResult(){
   $("motto").textContent = R.motto;
   $("badges").innerHTML = ['風險承受度 ' + ["低","中","高"][rLv], aLv ? '招式派' : '內功派', tName + '｜' + T.motto].map(t => '<span>' + t + '</span>').join("");
   $("desc").textContent = R.desc + T.desc;
+  const MS = MASTERS[rName];
+  const ini = MS.name.split("．").pop().slice(0, 1);
+  $("master").innerHTML = '<p class="k">你的投資風格，跟這位大師最接近</p>' +
+    '<div class="avatar"><div class="ring"><div class="face"><img src="img/masters/' + MS.photo + '.jpg" alt="' + MS.name + '" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{className:\'ini\',textContent:\'' + ini + '\'}))"></div></div></div>' +
+    '<h3>' + MS.name + '</h3><p class="en">' + MS.en + '　' + MS.life + '</p><span class="tag">' + MS.tag + '</span>' +
+    '<p class="who">' + MS.who + '</p>' +
+    '<div class="mstats">' + MS.stats.map(([a, b]) => '<div><b>' + a + '</b><span>' + b + '</span></div>').join("") + '</div>' +
+    '<p class="mlabel">他有多厲害</p><p class="intro">' + MS.intro + '</p>' +
+    '<div class="way"><b>代表做法｜</b>' + MS.way + '</div>' +
+    '<div class="common"><span>你和他的共同點</span>' + MS.common + '</div>' +
+    '<p class="src">依公開資料整理的投資風格比較，數字為概略值，僅供參考，不代表本人推薦這份配置。</p>';
+  showTab("profile", false);
 
   // 屬性分段量尺
   const axes = [
@@ -755,6 +857,15 @@ function renderResult(){
 
 $("startBtn").onclick = () => { idx = 0; openGate(1); };
 $("backBtn").onclick = () => { if (idx > 0) { idx--; renderQ(); } };
+
+/* ================= 結果分頁 ================= */
+function showTab(name, scroll = true){
+  document.querySelectorAll("#tabs button").forEach(b => { const on = b.dataset.tab === name; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+  document.querySelectorAll(".tabpanel").forEach(p => p.hidden = p.id !== "tab-" + name);
+  if (scroll) { const t = $("tabs").getBoundingClientRect().top + window.scrollY - 10; window.scrollTo({top: t, behavior: REDUCED ? "auto" : "smooth"}); }
+}
+document.querySelectorAll("#tabs button").forEach(b => b.onclick = () => showTab(b.dataset.tab));
+document.querySelectorAll(".nextTab").forEach(b => b.onclick = () => showTab(b.dataset.go));
 
 /* ================= 特效 ================= */
 const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -901,8 +1012,11 @@ function buildSheet(dateText){
     '<div class="sh-two"><div class="sh-entry"><b>進場建議｜' + entry.t + '</b>' + entry.d + '</div>' +
       '<div class="sh-cheer"><p>' + R.cheer + '</p><div class="from">許仙老師</div></div></div>' +
     '<div class="sh-foot">這份結果反映的是你現在的投資屬性，會隨人生階段改變，建議每年重新測一次。<br>僅供許仙秘笈投資學院課堂教學使用，測驗結果為教學參考，不構成投資建議。</div>';
-  const img = $("sheet").querySelector("img");
-  return img.complete ? Promise.resolve() : new Promise(r => { img.onload = img.onerror = r; });
+  const imgs = [...$("sheet").querySelectorAll("img")];
+  return Promise.all(imgs.map(img => new Promise(r => {
+    const done = () => { if (!img.naturalWidth && img.parentElement.classList.contains("sh-av")) { const av = img.parentElement; img.remove(); av.textContent = av.dataset.ini; } r(); };
+    if (img.complete) done(); else { img.onload = done; img.onerror = done; }
+  })));
 }
 
 async function savePdf(){
