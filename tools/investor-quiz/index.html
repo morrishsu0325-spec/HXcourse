@@ -262,6 +262,70 @@
   @keyframes pulse{0%,100%{box-shadow:0 6px 18px rgba(229,83,61,.35),0 0 0 0 rgba(229,83,61,.5)}50%{box-shadow:0 6px 18px rgba(229,83,61,.35),0 0 0 10px rgba(229,83,61,0)}}
   .stack div{transition:width 1s cubic-bezier(.2,.8,.2,1)}
   .stack:not(.in) div{width:0 !important}
+  /* ================= 一頁式 PDF 版面 ================= */
+  .sheet{position:absolute;left:-12000px;top:0;width:794px;min-height:1123px;padding:30px 34px 22px;background:#F4F1EA url(img/ink.webp) repeat;background-size:520px auto;color:var(--ink);font-family:var(--sans);line-height:1.5}
+  .sheet *{animation:none !important;transition:none !important}
+  .sh-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--red);padding-bottom:8px;margin-bottom:14px}
+  .sh-head b{font-family:var(--brush);font-weight:900;font-size:22px;color:var(--red);letter-spacing:.08em}
+  .sh-head span{font-size:12.5px;color:var(--ink-2)}
+  .sh-hero{position:relative;display:flex;gap:18px;border-radius:18px;overflow:hidden;background:#1C2731 url(img/path-summit.webp) center 35%/cover;color:#fff;padding:16px 22px 16px 14px;height:262px}
+  .sh-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,26,36,.35) 0,rgba(16,26,36,.82) 42%,rgba(16,26,36,.92) 100%)}
+  .sh-hero > *{position:relative}
+  .sh-fig{width:200px;flex:none;display:flex;align-items:flex-end;justify-content:center}
+  .sh-fig img{max-width:200px;max-height:236px;object-fit:contain}
+  .sh-seal{position:absolute;left:4px;bottom:2px;width:58px;height:58px;background:var(--red);border-radius:9px;transform:rotate(-5deg);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--brush);font-weight:900;font-size:21px;line-height:1.05;color:#fff;box-shadow:inset 0 0 0 3px var(--red),inset 0 0 0 4.5px rgba(255,255,255,.85)}
+  .sh-info{flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0}
+  .sh-info .lead{font-size:12px;letter-spacing:.2em;color:#C9D3DB;margin:0 0 4px}
+  .sh-info h1{font-family:var(--brush);font-weight:900;font-size:44px;letter-spacing:.06em;line-height:1.15;margin:0}
+  .sh-info h1 .t{color:#F6CF6B}
+  .sh-info .motto{font-family:var(--brush);font-size:17px;color:#E5EBF0;margin:2px 0 10px}
+  .sh-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .sh-badges span{font-size:11.5px;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22)}
+  .sh-info .desc2{font-size:12.5px;line-height:1.7;color:#DCE3E9;margin:0}
+  .sh-grid{display:grid;grid-template-columns:1fr 1.18fr;gap:14px;margin-top:14px}
+  .sh-card{background:rgba(255,255,255,.92);border-radius:14px;padding:13px 15px}
+  .sh-card h3{font-family:var(--brush);font-weight:900;font-size:16px;letter-spacing:.04em;margin:0 0 9px;display:flex;align-items:center;gap:7px}
+  .sh-card h3::before{content:"";width:4px;height:15px;border-radius:2px;background:var(--red)}
+  .sh-ax{margin-bottom:10px}
+  .sh-ax .r{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;margin-bottom:4px}
+  .sh-ax .r b{font-size:13px}
+  .sh-ax .r em{font-style:normal;font-weight:700;color:var(--c)}
+  .sh-ax .r strong{font-size:17px;color:var(--c);font-weight:900}
+  .sh-seg{display:grid;gap:2px}
+  .sh-seg i{height:9px;border-radius:2px;background:#E7E4DE}
+  .sh-seg i.on{background:var(--c)}
+  .sh-zn{display:grid;gap:2px;margin-top:3px}
+  .sh-zn span{font-size:10.5px;color:var(--ink-3);text-align:center;border-top:1.5px solid #E2DFD8;padding-top:1px}
+  .sh-zn span.me{color:var(--c);border-top-color:var(--c);font-weight:700}
+  .sh-map{display:grid;grid-template-columns:26px 1fr 1fr;gap:4px;margin-top:4px}
+  .sh-map div{font-size:11px;color:var(--ink-3);display:flex;align-items:center;justify-content:center}
+  .sh-map .c{background:#F1EEE8;border-radius:7px;padding:6px 0;font-family:var(--brush);font-weight:700;font-size:15px;color:var(--ink-2)}
+  .sh-map .c.me{background:var(--red);color:#fff}
+  .sh-row{display:grid;grid-template-columns:96px 1fr 84px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed #E3E0D9}
+  .sh-row:last-child{border-bottom:0}
+  .sh-row b{font-size:12.5px;line-height:1.3}
+  .sh-row small{display:block;font-size:10.5px;color:var(--ink-3);font-weight:400}
+  .sh-trk{position:relative;height:12px;border-radius:4px;background:#ECE9E3}
+  .sh-band{position:absolute;top:0;bottom:0;border-radius:4px;opacity:.85}
+  .sh-nd{position:absolute;top:-3px;bottom:-3px;width:3px;margin-left:-1.5px;border-radius:2px;background:var(--ink)}
+  .sh-lim{position:absolute;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:#fff;border:3px solid var(--red);font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center}
+  .sh-off{font-size:11px;color:var(--ink-3);text-align:center;letter-spacing:.1em}
+  .sh-val{text-align:right;font-size:11px;color:var(--ink-3);line-height:1.25}
+  .sh-val strong{display:block;font-size:17px;font-weight:900;color:var(--c)}
+  .sh-stack{display:flex;height:24px;border-radius:7px;overflow:hidden;margin:2px 0 8px}
+  .sh-stack div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden}
+  .sh-leg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 14px;font-size:12px}
+  .sh-leg div{display:flex;align-items:center;gap:6px}
+  .sh-leg i{width:9px;height:9px;border-radius:2px;flex:none}
+  .sh-leg b{margin-left:auto}
+  .sh-leg em{font-style:normal;color:var(--ink-3);font-size:11px}
+  .sh-two{display:grid;grid-template-columns:1fr 1.25fr;gap:14px;margin-top:14px}
+  .sh-entry{background:#FFF4D8;border-radius:14px;padding:12px 15px;font-size:12.5px;line-height:1.65}
+  .sh-entry b{display:block;font-size:13.5px;margin-bottom:2px}
+  .sh-cheer{background:#FDECE8;border-radius:14px;padding:12px 16px}
+  .sh-cheer p{font-family:var(--brush);font-weight:500;font-size:14.5px;line-height:1.75;margin:0}
+  .sh-cheer .from{font-size:12.5px;color:var(--red);text-align:right;margin-top:2px}
+  .sh-foot{margin-top:12px;font-size:10.5px;color:var(--ink-3);text-align:center;line-height:1.6}
   /* PDF 時一律顯示最終畫面 */
   body.pdfmode .fx,body.pdfmode .fx.in{opacity:1 !important;transform:none !important;transition:none !important}
   body.pdfmode *{animation:none !important;transition:none !important}
@@ -398,7 +462,8 @@
     </div>
   </main>
 
-  <div class="judging" id="judging" hidden>
+  <div class="sheet" id="sheet" aria-hidden="true"></div>
+<div class="judging" id="judging" hidden>
   <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/><circle cx="50" cy="50" r="40" fill="none" stroke="#E5533D" stroke-width="6" stroke-linecap="round" stroke-dasharray="70 182"/><circle cx="50" cy="50" r="28" fill="none" stroke="#F6CF6B" stroke-width="3" stroke-linecap="round" stroke-dasharray="30 146" transform="rotate(140 50 50)"/></svg>
   <p class="t">推演武林身分</p>
   <p class="s" id="judgeText"></p>
@@ -483,7 +548,7 @@ const GATES = {
 const PART_PIC = {1:"path-market", 2:"path-summit"};
 ["path-market","path-summit","map"].forEach(n => { const i = new Image(); i.src = "img/" + n + ".webp"; });
 
-let idx = 0, RESULT_NAME = "", RESULT_T = "", RESULT_R = "";
+let idx = 0, RESULT_NAME = "", RESULT_T = "", RESULT_R = "", RES = null;
 const ans = new Array(Q.length).fill(null);
 const $ = id => document.getElementById(id);
 function show(id){ ["intro","gate","quiz","result"].forEach(s => $(s).hidden = s !== id); window.scrollTo(0,0); }
@@ -682,6 +747,7 @@ function renderResult(){
 
   RESULT_NAME = tName + rName; RESULT_T = tName; RESULT_R = rName;
   const e = ENTRY[ans[1]];
+  RES = {rName, tName, R, T, rLv, aLv, axes, parts, entry: e};
   $("entry").innerHTML = '<b>' + e.t + '</b>' + e.d;
   $("cheer").textContent = R.cheer;
   playResult();
@@ -788,49 +854,80 @@ const LIBS = {
   pdf:"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
 };
 function loadScript(src){ return new Promise((ok, no) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+function buildSheet(dateText){
+  const {rName, tName, R, T, rLv, aLv, axes, parts, entry} = RES;
+  const base = Math.max(0, parseFloat($("amount").value) || 0);
+  const ax = axes.map(x => {
+    let seg = '';
+    for (let k = 1; k <= x.max; k++) seg += '<i' + (k <= x.v ? ' class="on"' : '') + '></i>';
+    const zn = x.zones.map(([t, a, b]) => '<span class="' + (x.v >= a && x.v <= b ? 'me' : '') + '" style="grid-column:' + Math.max(a, 1) + ' / ' + (Math.max(b, 1) + 1) + '">' + t + '</span>').join("");
+    return '<div class="sh-ax" style="--c:' + x.c + '"><div class="r"><b>' + x.name + '</b><span><em>' + x.label + '</em>　<strong>' + x.v + '</strong> / ' + x.max + ' 分</span></div>' +
+      '<div class="sh-seg" style="grid-template-columns:repeat(' + x.max + ',1fr)">' + seg + '</div>' +
+      '<div class="sh-zn" style="grid-template-columns:repeat(' + x.max + ',1fr)">' + zn + '</div></div>';
+  }).join("");
+  let mp = '<div></div><div>內功派（被動）</div><div>招式派（主動）</div>';
+  ["低","中","高"].forEach((lv, r) => { mp += '<div>' + lv + '</div>' + GRID[r].map(n => '<div class="c' + (n === rName ? ' me' : '') + '">' + n + '</div>').join(""); });
+  const row = (name, note, c, rng, sc, opt = {}) => {
+    let trk, val;
+    if (!rng) { trk = '<div class="sh-off">' + opt.offText + '</div>'; val = '<div class="sh-val" style="--c:' + c + '"><strong>—</strong></div>'; }
+    else {
+      const [mn, mx, v] = rng, L = mn / sc * 100, W = Math.max((mx - mn) / sc * 100, 1.5);
+      trk = '<div class="sh-trk"><div class="sh-band" style="left:' + L + '%;width:' + W + '%;background:' + c + '"></div>' +
+        (v == null ? '' : '<div class="sh-nd" style="left:' + (v / sc * 100) + '%"></div>') +
+        (opt.lim != null ? '<div class="sh-lim" style="left:' + (opt.lim / sc * 100) + '%">' + opt.lim + '</div>' : '') + '</div>';
+      val = '<div class="sh-val" style="--c:' + c + '">' + (opt.valHtml || ('<strong>' + v + '%</strong>範圍 ' + mn + '～' + mx + '%')) + '</div>';
+    }
+    return '<div class="sh-row"><b>' + name + '<small>' + note + '</small></b>' + trk + val + '</div>';
+  };
+  const rows = [
+    row("持股比例區間", "佔整個投資部位", "#E5533D", R.hold, 100),
+    row("個股比例", "佔持股，其餘放 ETF", "#E9A91F", R.stock, 100),
+    R.small ? row("小型股比例", "佔個股，其餘大型股", "#F08A5D", R.small, 100) : row("小型股比例", "佔個股", "#F08A5D", null, 100, {offText:"不碰小型股，只放大型股"}),
+    row("ETF 裡的高股息", "佔 ETF，其餘放 0050", "#2FA586", T.hd, 100),
+    row("大型股單檔上限", "佔整個投資部位", "#E5533D", [0, R.capL[1], R.capL[0]], 50, {lim:R.capL[1], valHtml:'<strong>' + (R.capL[0] == null ? '—' : R.capL[0] + '%') + '</strong>最多 ' + R.capL[1] + '%'}),
+    R.capS ? row("小型股單檔上限", "佔整個投資部位", "#F08A5D", [0, R.capS[1], R.capS[0]], 50, {lim:R.capS[1], valHtml:'<strong>' + R.capS[0] + '%</strong>最多 ' + R.capS[1] + '%'}) : row("小型股單檔上限", "佔整個投資部位", "#F08A5D", null, 50, {offText:"不適用"})
+  ].join("");
+  const stack = parts.map(p => '<div style="width:' + p.v + '%;background:' + p.c + '">' + (p.v >= 8 ? pct(p.v) : '') + '</div>').join("");
+  const leg = parts.map(p => '<div><i style="background:' + p.c + '"></i><span>' + p.n + ' <em>' + pct(p.v) + '</em></span><b>' + money(base, p.v) + '</b></div>').join("");
+  $("sheet").innerHTML =
+    '<div class="sh-head"><b>許仙秘笈投資學院｜投資屬性測驗結果</b><span>測驗日期 ' + dateText + '</span></div>' +
+    '<div class="sh-hero"><div class="sh-fig"><img src="img/' + R.img + '.webp" alt=""><div class="sh-seal">' + [...rName].map(c => '<span>' + c + '</span>').join("") + '</div></div>' +
+      '<div class="sh-info"><p class="lead">你的投資人角色是</p><h1><span class="t">' + tName + '</span>' + rName + '</h1><p class="motto">' + R.motto + '</p>' +
+      '<div class="sh-badges"><span>風險承受度 ' + ["低","中","高"][rLv] + '</span><span>' + (aLv ? '招式派（主動）' : '內功派（被動）') + '</span><span>' + tName + '｜' + T.motto + '</span></div>' +
+      '<p class="desc2">' + R.desc + T.desc + '</p></div></div>' +
+    '<div class="sh-grid"><div class="sh-card"><h3>投資屬性能力值</h3>' + ax + '<h3 style="margin-top:6px">武林位置</h3><div class="sh-map">' + mp + '</div></div>' +
+      '<div class="sh-card"><h3>建議資產配置</h3>' + rows + '<p style="font-size:10.5px;color:var(--ink-3);margin:6px 0 0">色塊為建議範圍、黑線為建議數字、紅圈為單檔上限。大型股：市值 1,000 億元以上。</p></div></div>' +
+    '<div class="sh-card" style="margin-top:14px"><h3>換算成實際金額（投資部位 ' + base.toLocaleString("zh-TW") + ' 萬元）</h3><div class="sh-stack">' + stack + '</div><div class="sh-leg">' + leg + '</div></div>' +
+    '<div class="sh-two"><div class="sh-entry"><b>進場建議｜' + entry.t + '</b>' + entry.d + '</div>' +
+      '<div class="sh-cheer"><p>' + R.cheer + '</p><div class="from">許仙老師</div></div></div>' +
+    '<div class="sh-foot">這份結果反映的是你現在的投資屬性，會隨人生階段改變，建議每年重新測一次。<br>僅供許仙秘笈投資學院課堂教學使用，測驗結果為教學參考，不構成投資建議。</div>';
+  const img = $("sheet").querySelector("img");
+  return img.complete ? Promise.resolve() : new Promise(r => { img.onload = img.onerror = r; });
+}
+
 async function savePdf(){
   const btn = $("pdfBtn"), label = btn.textContent;
   btn.disabled = true; btn.textContent = "產生 PDF 中…";
-  const d = new Date();
-  $("pdfDate").textContent = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate();
+  const d = new Date(), dateText = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate();
+  $("pdfDate").textContent = dateText;
   try {
     if (!window.html2canvas) await loadScript(LIBS.h2c);
     if (!window.jspdf) await loadScript(LIBS.pdf);
+    await buildSheet(dateText);
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
-    document.body.classList.add("pdfmode");
-    const node = $("result");
-    const scale = 2;
-    const canvas = await html2canvas(node, {scale, backgroundColor:"#EEF3F7", useCORS:true, logging:false});
-    // 分頁時盡量切在區塊之間，不把卡片切成兩半
-    const top0 = node.getBoundingClientRect().top;
-    const cuts = [...node.querySelectorAll(".pdfhead,.reveal,.desc,section.block,.gauge,.axis,.mapbox,.stack,.legend,.cheer")].filter(el => el.offsetParent !== null)
-      .map(el => Math.round((el.getBoundingClientRect().bottom - top0 + 8) * scale));
-    document.body.classList.remove("pdfmode");
+    const sheet = $("sheet");
+    const canvas = await html2canvas(sheet, {scale:2, backgroundColor:"#F4F1EA", useCORS:true, logging:false});
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({unit:"mm", format:"a4"});
-    const PW = 210, PH = 297, M = 10, W = PW - M * 2;
-    const pxPerMm = canvas.width / W, pageH = Math.floor((PH - M * 2) * pxPerMm);
-    let y = 0, first = true;
-    while (y < canvas.height - 2) {
-      let end = Math.min(y + pageH, canvas.height);
-      if (end < canvas.height) {
-        const ok = cuts.filter(c => c > y + pageH * 0.3 && c <= end);
-        if (ok.length) end = ok[ok.length - 1];
-      }
-      const h = end - y, c = document.createElement("canvas");
-      c.width = canvas.width; c.height = h;
-      const cx = c.getContext("2d");
-      cx.fillStyle = "#EEF3F7"; cx.fillRect(0, 0, c.width, h);
-      cx.drawImage(canvas, 0, y, canvas.width, h, 0, 0, canvas.width, h);
-      if (!first) pdf.addPage();
-      pdf.setFillColor(238, 243, 247); pdf.rect(0, 0, PW, PH, "F");
-      pdf.addImage(c.toDataURL("image/jpeg", 0.9), "JPEG", M, M, W, h / pxPerMm);
-      first = false; y = end;
-    }
+    const PW = 210, PH = 297;
+    // 整份結果縮放成剛好一頁 A4
+    const ratio = Math.min(PW / canvas.width, PH / canvas.height);
+    const w = canvas.width * ratio, h = canvas.height * ratio;
+    pdf.setFillColor(244, 241, 234); pdf.rect(0, 0, PW, PH, "F");
+    pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (PW - w) / 2, 0, w, h);
     pdf.save("投資屬性測驗結果_" + RESULT_NAME + ".pdf");
   } catch (err) {
     console.error("PDF 產生失敗", err && (err.stack || err.message || err.type || err));
-    document.body.classList.remove("pdfmode");
     alert("這台裝置無法直接產生 PDF，接下來會開啟列印畫面，請選擇「儲存為 PDF」。");
     window.print();
   } finally {
