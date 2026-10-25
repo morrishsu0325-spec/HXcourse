@@ -63,7 +63,7 @@
   .qtext{font-family:var(--brush);font-size:23px;font-weight:700;line-height:1.55;margin:0 0 22px}
   .opts{display:grid;gap:10px}
   .opt{display:block;width:100%;text-align:left;background:rgba(255,255,255,.92);border:1.5px solid rgba(35,38,43,.08);border-radius:16px;padding:15px 16px;box-shadow:0 2px 10px rgba(28,39,49,.05);cursor:pointer;color:var(--ink);transition:border-color .15s,background .15s,transform .15s}
-  .opt:hover{border-color:var(--red);transform:translateY(-1px)}
+  @media (hover:hover) and (pointer:fine){.opt:hover{border-color:var(--red);transform:translateY(-1px)}}
   .opt.on{border-color:var(--red);background:var(--red-l)}
   .opt b{display:block;font-size:16px;margin-bottom:2px}
   .opt span{display:block;font-size:14px;color:var(--ink-2)}
@@ -677,7 +677,7 @@ function renderQ(){
     btn.setAttribute("role","radio");
     btn.setAttribute("aria-checked", ans[idx] === i ? "true" : "false");
     btn.innerHTML = '<b><span class="k">' + "ABCD"[i] + '</span>' + o.b + '</b>' + (o.s ? '<span>' + o.s + '</span>' : '');
-    btn.onclick = (ev) => { inkAt(btn, ev); pick(i); };
+    btn.onclick = (ev) => { inkAt(btn, ev); btn.blur(); pick(i); };
     box.appendChild(btn);
   });
   $("backBtn").hidden = idx === 0;
