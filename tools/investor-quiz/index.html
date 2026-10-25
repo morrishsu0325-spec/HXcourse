@@ -114,6 +114,9 @@
   .hint{font-size:13.5px;color:var(--ink-3);margin:0 0 16px}
 
   /* ===== 速限橫條 ===== */
+.ggroup{margin:18px 0 8px;font-size:13px;color:var(--ink-3)}
+  .ggroup:first-child{margin-top:4px}
+  .ggroup b{display:block;font-family:var(--brush);font-size:16px;color:var(--ink);margin-bottom:1px}
   .gauge{background:var(--night);border-radius:18px;padding:16px 16px 14px;color:#fff;margin-bottom:12px}
   .g-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
   .g-head b{font-size:16px}
@@ -806,16 +809,24 @@ function renderResult(){
   $("map").innerHTML = m;
 
   // 建議配置：速限橫條
+  const inv = r => [100 - r[1], 100 - r[0], 100 - r[2]];
+  const rt = r => "建議範圍 " + r[0] + "～" + r[1] + "%";
+  const smallR = R.small || [0, 0, 0], largeR = inv(smallR), etfR = inv(R.stock), f50R = inv(T.hd);
+  const grp = (t, d) => '<p class="ggroup"><b>' + t + '</b>' + d + '</p>';
   const g = [];
+  g.push(grp("① 持股與現金", "整個投資部位裡，多少拿去買股票"));
   g.push(gauge({name:"持股比例區間", sub:"佔整個投資部位。市場熱時往下限減碼，市場冷時往上限加碼", rng:R.hold, c:"#E5533D",
-    rangeText:"建議範圍 " + R.hold[0] + "～" + R.hold[1] + "%，其餘保留現金"}));
-  g.push(gauge({name:"個股比例", sub:"佔持股部分，剩下的放 ETF", rng:R.stock, c:"#E9A91F",
-    rangeText:"建議範圍 " + R.stock[0] + "～" + R.stock[1] + "%"}));
-  if (R.small) g.push(gauge({name:"小型股比例", sub:"佔個股部分，剩下的放大型股", rng:R.small, c:"#F08A5D",
-    rangeText:"建議範圍 " + R.small[0] + "～" + R.small[1] + "%"}));
-  else g.push(gauge({name:"小型股比例", sub:"佔個股部分", off:true, offText:"只放大型股", offLabel:"不碰小型股", c:"#F08A5D"}));
-  g.push(gauge({name:"ETF 裡的高股息", sub:"佔 ETF 部分，剩下的放 0050（依你的稱號「" + tName + "」）", rng:T.hd, c:"#2FA586",
-    rangeText:"建議範圍 " + T.hd[0] + "～" + T.hd[1] + "%"}));
+    rangeText:rt(R.hold) + "，其餘保留現金"}));
+  g.push(grp("② 個股與 ETF", "持股裡，多少自己選股、多少交給 ETF"));
+  g.push(gauge({name:"個股比例", sub:"佔持股部分", rng:R.stock, c:"#E9A91F", rangeText:rt(R.stock)}));
+  g.push(gauge({name:"ETF 比例", sub:"佔持股部分", rng:etfR, c:"#2FA586", rangeText:rt(etfR)}));
+  g.push(grp("③ 個股裡：大型股與小型股", "大型股＝市值 1,000 億元以上的公司"));
+  g.push(gauge({name:"大型股比例", sub:"佔個股部分", rng:largeR, c:"#C4402F", rangeText:R.small ? rt(largeR) : "個股全部放大型股"}));
+  if (R.small) g.push(gauge({name:"小型股比例", sub:"佔個股部分", rng:R.small, c:"#F08A5D", rangeText:rt(R.small)}));
+  else g.push(gauge({name:"小型股比例", sub:"佔個股部分", off:true, offText:"不碰小型股", offLabel:"不碰小型股", c:"#F08A5D"}));
+  g.push(grp("④ ETF 裡：0050 與高股息", "依你的稱號「" + tName + "」決定比例"));
+  g.push(gauge({name:"0050 比例", sub:"佔 ETF 部分", rng:f50R, c:"#2FA586", rangeText:rt(f50R)}));
+  g.push(gauge({name:"高股息 ETF 比例", sub:"佔 ETF 部分", rng:T.hd, c:"#7CCBB3", rangeText:rt(T.hd)}));
   $("gauges").innerHTML = g.join("");
 
   // 單檔上限：速限牌
@@ -992,9 +1003,12 @@ function buildSheet(dateText){
   };
   const rows = [
     row("持股比例區間", "佔整個投資部位", "#E5533D", R.hold, 100),
-    row("個股比例", "佔持股，其餘放 ETF", "#E9A91F", R.stock, 100),
-    R.small ? row("小型股比例", "佔個股，其餘大型股", "#F08A5D", R.small, 100) : row("小型股比例", "佔個股", "#F08A5D", null, 100, {offText:"不碰小型股，只放大型股"}),
-    row("ETF 裡的高股息", "佔 ETF，其餘放 0050", "#2FA586", T.hd, 100),
+    row("個股比例", "佔持股", "#E9A91F", R.stock, 100),
+    row("ETF 比例", "佔持股", "#2FA586", [100 - R.stock[1], 100 - R.stock[0], 100 - R.stock[2]], 100),
+    row("大型股比例", "佔個股", "#C4402F", R.small ? [100 - R.small[1], 100 - R.small[0], 100 - R.small[2]] : [100, 100, 100], 100),
+    R.small ? row("小型股比例", "佔個股", "#F08A5D", R.small, 100) : row("小型股比例", "佔個股", "#F08A5D", null, 100, {offText:"不碰小型股"}),
+    row("0050 比例", "佔 ETF", "#2FA586", [100 - T.hd[1], 100 - T.hd[0], 100 - T.hd[2]], 100),
+    row("高股息 ETF 比例", "佔 ETF", "#7CCBB3", T.hd, 100),
     row("大型股單檔上限", "佔整個投資部位", "#E5533D", [0, R.capL[1], R.capL[0]], 50, {lim:R.capL[1], valHtml:'<strong>' + (R.capL[0] == null ? '—' : R.capL[0] + '%') + '</strong>最多 ' + R.capL[1] + '%'}),
     R.capS ? row("小型股單檔上限", "佔整個投資部位", "#F08A5D", [0, R.capS[1], R.capS[0]], 50, {lim:R.capS[1], valHtml:'<strong>' + R.capS[0] + '%</strong>最多 ' + R.capS[1] + '%'}) : row("小型股單檔上限", "佔整個投資部位", "#F08A5D", null, 50, {offText:"不適用"})
   ].join("");
